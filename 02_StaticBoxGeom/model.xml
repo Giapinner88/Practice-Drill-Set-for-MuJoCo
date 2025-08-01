@@ -1,0 +1,26 @@
+<mujoco model="static_box">
+    <option gravity="0 0 -9.81" timestep="0.002"/>
+    <visual>
+        <map znear="0.01" zfar="5"/>
+    </visual>
+    <worldbody>
+        <!--Tọa độ mặc định của sàn pos = 0 0 0-->
+        <geom name="ground" type="plane" size="5 5 0.1" rgba="0.2 0.3 0.4 1"/>
+
+        <!--khối vuông kích thước 0.2 có tọa độ khối tâm pos = 0 0 0.2-->
+        <geom name="cube" type="box" size="0.2 0.2 0.2" pos="0 0 0.2" rgba="0.8 0.1 0.1 1"/>
+
+        <!--khối trụ 2 đầu cầu-->
+        <geom name="link" type="capsule" size="0.03 0.2" pos="0.5 0 0.23" rgba="0 1 0 1"/>
+
+        <!--khối cầu-->
+        <geom name="ball" type="sphere" size="0.2" pos="-0.5 0 0.2" rgba="1 0 0 1"/>
+
+        <!--Khối trụ tròn-->
+        <geom name="pillar" type="cylinder" size="0.05 0.2" pos="1 0 0.2" rgba="0 0 1 1"/>
+
+        <!--Khối ellipsoid-->
+        <geom name="oval" type="ellipsoid" size="0.1 0.05 0.05" pos="-1 0 0.2" rgba="0 1 1 1"/>
+
+    </worldbody>
+</mujoco>
