@@ -2,7 +2,7 @@ import mujoco
 import mujoco.viewer
 import time
 
-model = mujoco.MjModel.from_xml_path("Practise/02_StaticBoxGeom/model.xml")
+model = mujoco.MjModel.from_xml_path("07_FramenOrientation/model.xml")
 data = mujoco.MjData(model)
 
 # Launch viewer
