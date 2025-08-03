@@ -1,0 +1,15 @@
+<mujoco model="empty_world">
+
+    <!-- gravity = 9.81 -->
+    <!-- khoảng thời gian vật lý giả lập giữa các bước cập nhật mô phỏng = 0.002 - giá trị mặc định-->
+    <option gravity="0 0 -9.81" timestep="0.002"/>
+
+    <visual>
+        <!-- phạm vi nhìn của camera -->
+        <map znear="0.01" zfar="5"/>
+    </visual>
+
+    <worldbody>
+        <!-- Empty worldbody -->
+    </worldbody>
+</mujoco>

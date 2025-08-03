@@ -1,0 +1,48 @@
+<mujoco model="tendon_soft_constraint">
+  <option gravity="0 0 -9.81"/>
+
+  <worldbody>
+    <geom type="plane" size="5 5 0.1" rgba="0.8 0.9 0.8 1"/>
+
+    <!-- Trụ cố định -->
+    <body name="base" pos="0 0 0.1">
+      <geom type="cylinder" size="0.02 0.1" rgba="0.4 0.4 0.4 1"/>
+      
+      <body name="link1" pos="0 0 0.2">
+        <joint name="hinge1" type="hinge" axis="0 0 1" limited="true" range="-90 90"/>
+        <geom type="capsule" fromto="0 0 0 0.2 0 0" size="0.01" rgba="0.1 0.5 0.8 1"/>
+        
+        <body name="link2" pos="0.2 0 0">
+          <joint name="hinge2" type="hinge" axis="0 0 1" limited="true" range="-90 90"/>
+          <geom type="capsule" fromto="0 0 0 0.2 0 0" size="0.01" rgba="0.8 0.5 0.1 1"/>
+
+          <!-- Site tại đầu link2 -->
+          <site name="tendon_end" pos="0.2 0 0" size="0.005" rgba="0 0 1 1"/>
+        </body>
+
+        <!-- Site tại gốc link1 -->
+        <site name="tendon_start" pos="0 0 0" size="0.005" rgba="1 0 0 1"/>
+      </body>
+    </body>
+  </worldbody>
+
+  <sensor>
+    <tendonactuatorfrc tendon="cable_tendon"/>
+  </sensor>
+
+  <actuator>
+    <motor joint="hinge1" ctrlrange="-1 1" ctrllimited="true"/>
+  </actuator>
+
+  <tendon>
+    <spatial name="cable_tendon"
+             limited="true" range="0.2 0.6"
+             width="0.002"
+             springlength="0.4"
+             stiffness="100"
+             damping="2">
+      <site site="tendon_start"/>
+      <site site="tendon_end"/>
+    </spatial>
+  </tendon>
+</mujoco>

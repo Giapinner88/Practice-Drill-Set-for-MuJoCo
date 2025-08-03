@@ -1,0 +1,40 @@
+<mujoco model="contact_constraint_demo">
+  <option timestep="0.01" gravity="0 0 -9.81"/>
+
+  <worldbody>
+    <!-- Mặt đất -->
+    <geom type="plane" size="2 2 0.1" rgba="0.9 0.9 0.9 1"/>
+
+    <!-- Vật rơi tự do -->
+    <body name="falling_box" pos="0 0 2">
+      <freejoint/>
+      <geom type="box" size="0.1 0.1 0.1" rgba="0.2 0.4 0.9 1" friction="0.8 0.005 0.0001"/>
+      <site name="box_site" pos="0.1 0.1 0.1" rgba="0 0.5 0.5 1"/>
+    </body>
+
+    <!-- Cánh tay cố định có ràng buộc -->
+    <body name="arm_base" pos="0.5 0 0.2">
+      <joint name="hinge_joint" type="hinge" axis="0 0 1" range="-90 90" limited="true"/>
+      <geom type="capsule" fromto="0 0 0 0.3 0 0" size="0.02" rgba="0.6 0.2 0.2 1"/>
+      <site name="arm_tip" pos="0.3 0 0" size="0.01" rgba="1 0 0 1"/>
+    </body>
+
+    <!-- Vật cố định để ràng buộc khoảng cách -->
+    <body name="anchor" pos="0.5 0.3 0.2">
+      <site name="anchor_site" pos="0 0 0" size="0.01" rgba="0 1 0 1"/>
+    </body>
+  </worldbody>
+
+  <equality>
+    <!-- Ràng buộc khoảng cách giữa hai site -->
+    <connect name="spring_cons1" site1="arm_tip" site2="anchor_site" />
+    <connect name="spring_cons2" site1="box_site" site2="anchor_site" />
+  </equality>
+
+  <sensor>
+    <!-- Đo lực tại joint (từ constraint phản ứng) -->
+    <jointactuatorfrc joint="hinge_joint"/>
+    <!-- Đo lực tiếp xúc -->
+    <force site="arm_tip"/>
+  </sensor>
+</mujoco>

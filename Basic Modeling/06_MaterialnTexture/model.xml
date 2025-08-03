@@ -1,0 +1,29 @@
+<mujoco model="material_texture_example">
+
+    <option gravity="0 0 -9.81" timestep="0.01"/>
+
+    <asset>
+        <texture name="wood_tex" type="2d" file="assets/wood_texture.png" 
+             height="256" width="256" />
+        <texture name="fabric_tex" type="2d" file="assets/fabric_texture.png" 
+             height="256" width="256" />
+        <material name="wood_mat" texture="wood_tex" specular="0.5" shininess="0.3" 
+              reflectance="0.1"/>
+        <material name="fabric_mat" texture="fabric_tex" specular="0.1" shininess="0.1" 
+              emission="0.05"/>
+        <material name="matte_gray" rgba="0.5 0.5 0.5 1" specular="0.5" shininess="0.5"/>
+    </asset>
+
+    <worldbody>
+        <geom type="plane" size="5 5 0.1" material="matte_gray" />
+        
+        <body pos="0 0 0.2">
+            <geom type="box" size="0.5 0.5 0.2" material="wood_mat"/>
+        </body>
+
+        <body pos="1 0 0.2">
+            <geom type="box" size="0.5 0.5 0.2" material="fabric_mat"/>
+        </body>
+    </worldbody>
+
+</mujoco>

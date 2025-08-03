@@ -1,0 +1,33 @@
+<mujoco model="light_example">
+  <option timestep="0.01" gravity="0 0 -9.81"/>
+
+  <worldbody>
+    <!-- Mặt đất -->
+    <geom type="plane" size="2 2 0.1" rgba="0.9 0.9 0.9 1"/>
+
+    <!-- Vật thể chính -->
+    <body name="box_main" pos="0 0 0.1">
+      <geom type="box" size="0.1 0.1 0.1" rgba="0.2 0.4 0.8 1"/>
+      <joint name="slide_y" type="slide" axis="0 1 0"/>
+      <light name="body_light" pos="0 0 0.5" dir="0 0 -1" mode="track" castshadow="true"/>
+    </body>
+
+    <!-- Vật thể phụ -->
+    <body name="box_extra" pos="0.5 0 0.1">
+        <geom type="box" size="0.1 0.1 0.1" rgba="0.50 1.00 1.00 1"/>
+        <joint type="free"/>
+        <!--đèn này trong body không tạo bóng cho geom nào kể cả chính body chứa nó-->
+        <light castshadow="false"/>
+    </body>
+
+    <!-- Đèn spotlight cố định từ trên cao -->
+    <light name="spot_light" pos="0 0 2" dir="0 0 -1" castshadow="true" directional="false"/>
+
+    <!-- Đèn bên hông, không đổ bóng -->
+    <light name="side_light" pos="1 1 1" dir="-1 -1 -1" castshadow="true"/>
+  </worldbody>
+
+  <actuator>
+    <motor joint="slide_y" ctrlrange="-1 1" ctrllimited="true"/>
+  </actuator>
+</mujoco>

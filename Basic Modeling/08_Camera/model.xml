@@ -1,0 +1,33 @@
+<mujoco model="camera_modes_demo">
+  <worldbody>
+
+    <!-- Camera định hướng bằng xyaxes -->
+    <camera name="cam_xyaxes" pos="0 0 2" xyaxes="1 0 0 0 1 0"/>
+
+    <body name="center" pos="0 0 0">
+      <geom type="sphere" size="0.1" rgba="0.3 0.6 1 1"/>
+    </body>
+
+    <body name="moving" pos="1 0 0">
+
+      <!-- Camera bám theo COM của body moving -->
+      <camera name="cam_trackcom" mode="trackcom" pos="0 0 1" />
+
+      <joint name="slide_x" type="slide" axis="1 0 0"/>
+      <geom type="box" size="0.1 0.1 0.1" rgba="1 0.2 0.2 1"/>
+      <!-- gắn camera vào body này để dùng với targetbody -->
+
+      <!-- Camera luôn nhìn vào body "moving" -->
+      <camera name="cam_target" mode="targetbody" target="moving" pos="1 0 2" />
+    </body>
+
+    <!-- Camera cố định trong world body -->
+    <camera name="cam_fixed" pos="0 0 1" mode="fixed" />
+  </worldbody>
+
+  <actuator>
+    <motor joint="slide_x" ctrlrange="-1 1" ctrllimited="true"/>
+  </actuator>
+
+  <option gravity="0 0 -9.81"/>
+</mujoco>

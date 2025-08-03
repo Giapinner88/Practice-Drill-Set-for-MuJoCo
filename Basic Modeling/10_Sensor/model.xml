@@ -1,0 +1,34 @@
+<mujoco model="sensor_example">
+  <option timestep="0.01" gravity="0 0 -9.81"/>
+
+  <worldbody>
+    <!-- Mặt đất -->
+    <geom type="plane" size="2 2 0.1" rgba="0.9 0.9 0.9 1"/>
+
+    <!-- Vật thể có khớp xoay -->
+    <body name="arm_base" pos="0 0 0.1">
+      <joint name="hinge_joint" type="hinge" axis="0 0 1" limited="false" range="-360 360"/>
+      <geom type="capsule" fromto="0 0 0 0 0.5 0" size="0.03" rgba="0.3 0.6 0.9 1"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor joint="hinge_joint" ctrlrange="-1 1" ctrllimited="true"/>
+  </actuator>
+
+  <sensor>
+    <!-- Cảm biến đo vị trí, vận tốc và lực ở khớp -->
+    <jointpos joint="hinge_joint"/>
+    <jointvel joint="hinge_joint"/>
+    <jointactuatorfrc joint="hinge_joint"/>
+
+    <!-- Cảm biến IMU -->
+    <accelerometer site="imu_site"/>
+    <gyro site="imu_site"/>
+  </sensor>
+
+  <worldbody>
+    <!-- Thêm một site để gắn cảm biến IMU, hình cầu nhỏ màu đỏ -->
+    <site name="imu_site" pos="0 0.25 0.1" size="0.01" rgba="1 0 0 1"/>
+  </worldbody>
+</mujoco>

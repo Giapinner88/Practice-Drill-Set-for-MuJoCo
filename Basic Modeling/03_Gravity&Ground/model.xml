@@ -1,0 +1,17 @@
+<mujoco model="gravity_ground">
+
+    <!-- gia tốc trọng trường = 9.81 -->
+    <!-- khoảng thời gian vật lý giả lập giữa các bước cập nhật mô phỏng = 0.01-->
+    <option gravity="0 0 -9.81" timestep="0.01"/>
+
+    <worldbody>
+        <!--Sàn-->
+        <geom name="ground" type="plane" size="5 5 0.1" rgba="0.3 0.4 0.4 1"/>
+
+        <!--tọa độ khối tâm pos = 0 0 2, kích thước khối vuông 0.1-->
+        <body name="falling_box" pos="0 0 2">
+            <geom type="box" size="0.1 0.1 0.1" rgba="0.8 0.2 0.2 1"/>
+            <joint type="free"/>
+        </body>
+    </worldbody>
+</mujoco>
