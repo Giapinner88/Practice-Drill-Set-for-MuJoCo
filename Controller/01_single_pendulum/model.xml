@@ -1,0 +1,30 @@
+<mujoco model="simple_pendulum">
+  <option gravity="0 0 -9.81" timestep="0.02"/>
+
+  <worldbody>
+    <body name="base" pos="0 0 0">
+      <body name="pendulum" pos="0 0 0.5">
+        
+        <joint name="hinge" type="hinge" axis="0 1 0" limited="false" range="-180 180" damping="0.1"/>
+        <geom type="capsule" fromto="0 0 0 0 0 -0.5" size="0.05" rgba="0.1 0.3 0.8 1"/>
+        
+        <site name="pendulum_head" pos="0 0 -0.5" rgba="0 0.5 0.5 1"/>
+
+        <!-- Khối lượng và khối tâm của pendulum -->
+        <inertial pos="0 0 -0.25" mass="1.0" diaginertia="0.01 0.01 0.001"/>
+      
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <!-- Điều khiển moment lên khớp hinge -->
+    <motor name="pendulum_motor" joint="hinge" ctrlrange="-10 10" ctrllimited="true"/>
+  </actuator>
+
+  <sensor>
+    <jointpos joint="hinge"/>
+    <jointvel joint="hinge"/>
+    <jointactuatorfrc joint="hinge"/>
+  </sensor>
+</mujoco>

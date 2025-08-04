@@ -2,7 +2,7 @@ import mujoco
 import mujoco.viewer
 import time
 
-model = mujoco.MjModel.from_xml_path("12_Tendon/model.xml")
+model = mujoco.MjModel.from_xml_path("/home/giap-ros/Mujoco/Practise/Controller/01_single_pendulum/model.xml")
 data = mujoco.MjData(model)
 
 # Launch viewer
