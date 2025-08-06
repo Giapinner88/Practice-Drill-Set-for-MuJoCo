@@ -1,8 +1,6 @@
 import mujoco
-import mujoco.viewer
 import numpy as np
 import math
-import time
 
 # Load mô hình từ XML
 model = mujoco.MjModel.from_xml_path("Con_lac_nguoc.xml")
