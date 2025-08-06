@@ -10,12 +10,12 @@ model_path = "arm_2D_PID.xml"
 model = mujoco.MjModel.from_xml_path(model_path)
 data = mujoco.MjData(model)
 
-Use_PID = False
+Use_PID = True
 
 # PID controller (có thể thay đổi)
-Kp = 50 
-Ki = 0.1 
-Kd = 1 
+Kp = [60, 60]
+Ki = [0, 0] 
+Kd = [3, 3]
 
 def quy_dao1(t):
     c = 3.14
@@ -85,13 +85,13 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
 
         # Joint pos ban đầu pos
         measured_value = [data.qpos[0], data.qpos[1]]
-        setpoint = quy_dao2(current_time)
+        setpoint = quy_dao1(current_time)
 
         # Compute control signals
         control_value = []
         if Use_PID:
             for i in range(2):
-                ctrl, err, integral[i] = pid_controller(setpoint[i], measured_value[i], pre_error[i], integral[i], dt, Kp, Ki, Kd)
+                ctrl, err, integral[i] = pid_controller(setpoint[i], measured_value[i], pre_error[i], integral[i], dt, Kp[i], Ki[i], Kd[i])
                 pre_error[i] = err
                 control_value.append(ctrl)
         else:
@@ -110,8 +110,9 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
 
         # Simulation
         mujoco.mj_step(model, data)
+        time.sleep(model.opt.timestep)
         viewer.sync()
 
-        if current_time >= 2:
+        if current_time >= 5:
             bieu_do1(time_log, qpos_log1, qpos_log2, setpoint_log1, setpoint_log2, Use_PID)
             break

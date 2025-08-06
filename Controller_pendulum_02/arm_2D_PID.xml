@@ -1,6 +1,6 @@
 <mujoco model="arm_2D">
 
-    <compiler angle="degree" coordinate="local" />
+    <compiler angle="radian" coordinate="local" />
     <option timestep="0.01" gravity="0 0 -9.81" />
 
     <worldbody>
@@ -21,10 +21,10 @@
     </worldbody>
 
     <actuator>
-        <!-- <position joint="joint1" ctrlrange="0 6.28" kp="5.0" />
-        <position joint="joint2" ctrlrange="0 6.28" kp="5.0" /> -->
-        <motor joint="joint1" ctrlrange="-50 50" />
-        <motor joint="joint2" ctrlrange="-50 50" />
+        <position joint="joint1" ctrlrange="0 6.28" kp="5.0" />
+        <position joint="joint2" ctrlrange="0 6.28" kp="5.0" />
+        <!-- <motor joint="joint1" ctrlrange="-50 50" />
+        <motor joint="joint2" ctrlrange="-50 50" /> -->
     </actuator>
 
 </mujoco>
