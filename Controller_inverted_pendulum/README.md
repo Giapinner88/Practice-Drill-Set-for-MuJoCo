@@ -6,23 +6,37 @@ Dự án này mô phỏng và điều khiển con lắc ngược sử dụng cô
 2. Ổn định (PID) – khi con lắc gần thẳng đứng, bộ điều khiển PID sẽ giữ thăng bằng.
 
 📁 Tệp tin
+
  Con_lac_nguoc.xml – Mô hình MuJoCo của con lắc ngược.
+ 
  Can_bang_cln.py – Tập lệnh điều khiển và mô phỏng.
+ 
 find_stage_1 - Tìm k, kx, kv
+
 find_stage_2 - Tìm kp, ki, kd
+
 Stage_1 - Test giai đoạn Swing-up
+
 Stage_2 - Test giai đoạn ổn định
 
 ⚙️ Yêu cầu
+
 Python ≥ 3.8
+
 Các thư viện:
 
 mujoco
+
 mujoco.viewer
+
 numpy
+
 time
+
 math
+
 itertools
+
 
 Cài đặt bằng pip:
 
