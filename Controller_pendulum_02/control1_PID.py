@@ -18,10 +18,9 @@ Ki = 0
 Kd = 10
 
 # Góc mục tiêu (có thể thay đổi)
-target_angle = np.deg2rad(80)  # 90 độ
+target_angle = np.deg2rad(80)  # 80 độ
 
-def quy_dao(t):
-    target_angle = np.deg2rad(90)
+def quy_dao(t, target_angle):
     return target_angle 
 
 def pid_controller(setpoint, measured_value, pre_error, integral, dt, Kp, Ki, Kd):
@@ -62,7 +61,7 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         dt = model.opt.timestep
 
         measured_value = data.qpos[0]
-        setpoint = quy_dao(current_time)
+        setpoint = quy_dao(current_time, target_angle)
 
         # Compute control signals
         control_value = []
