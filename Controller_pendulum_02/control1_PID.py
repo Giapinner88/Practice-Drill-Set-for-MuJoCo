@@ -56,6 +56,8 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
     setpoint_log=[]
     time_log = []
 
+    time.sleep(2)
+
     while viewer.is_running():
         current_time = time.time() - start_time
         dt = model.opt.timestep
