@@ -13,17 +13,16 @@ data = mujoco.MjData(model)
 Use_PID = True
 
 # PID controller (có thể thay đổi)
-Kp = 30
-Ki = 5
-Kd = 2
+Kp = 10
+Ki = 0
+Kd = 10
 
 # Góc mục tiêu (có thể thay đổi)
-target_angle = np.deg2rad(90)  # 90 độ
+target_angle = np.deg2rad(80)  # 90 độ
 
 def quy_dao(t):
-    omega = np.pi  * 5
-    joint = np.sin(omega * t)
-    return joint 
+    target_angle = np.deg2rad(90)
+    return target_angle 
 
 def pid_controller(setpoint, measured_value, pre_error, integral, dt, Kp, Ki, Kd):
     error = setpoint - measured_value
@@ -85,6 +84,7 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
 
         mujoco.mj_step(model, data)
         viewer.sync()
+        time.sleep(model.opt.timestep)
 
         if current_time >= 5:
             bieu_do1(time_log, qpos_log, setpoint_log, Use_PID)
