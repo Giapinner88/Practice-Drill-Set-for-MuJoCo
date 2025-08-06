@@ -10,13 +10,14 @@ model_path = "arm1_2D_PID.xml"
 model = mujoco.MjModel.from_xml_path(model_path)
 data = mujoco.MjData(model)
 
-# Các hệ số PID
 Use_PID = False
+
+# PID controller (có thể thay đổi)
 Kp = 30
 Ki = 5
 Kd = 2
 
-# Góc mục tiêu
+# Góc mục tiêu (có thể thay đổi)
 target_angle = np.deg2rad(90)  # 90 độ
 
 def quy_dao(t):

@@ -10,11 +10,12 @@ model_path = "arm_2D_PID.xml"
 model = mujoco.MjModel.from_xml_path(model_path)
 data = mujoco.MjData(model)
 
-# PID controller
 Use_PID = False
-Kp = 50 #(default=50.0)
-Ki = 0.1 #(default=0.1)
-Kd = 1 #(default=1.0)
+
+# PID controller (có thể thay đổi)
+Kp = 50 
+Ki = 0.1 
+Kd = 1 
 
 def quy_dao1(t):
     c = 3.14
