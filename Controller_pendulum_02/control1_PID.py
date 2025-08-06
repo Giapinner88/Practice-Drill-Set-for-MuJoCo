@@ -10,7 +10,7 @@ model_path = "arm1_2D_PID.xml"
 model = mujoco.MjModel.from_xml_path(model_path)
 data = mujoco.MjData(model)
 
-Use_PID = False
+Use_PID = True
 
 # PID controller (có thể thay đổi)
 Kp = 30
