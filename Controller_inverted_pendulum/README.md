@@ -23,21 +23,6 @@ Stage_2 - Test giai đoạn ổn định
 
 Python ≥ 3.8
 
-Các thư viện:
-
-mujoco
-
-mujoco.viewer
-
-numpy
-
-time
-
-math
-
-itertools
-
-
 Cài đặt bằng pip:
 
 pip install mujoco mujoco.viewer numpy time math itertools
