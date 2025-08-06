@@ -47,6 +47,8 @@ def bieu_do1(time_log, qpos_log, setpoint_log, use_pid):
 
 # Viewer (giao diện trực quan)
 with mujoco.viewer.launch_passive(model, data) as viewer:
+    time.sleep(2)
+
     start_time = time.time()
     pre_error = 0
     integral = 0
@@ -55,8 +57,6 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
     qpos_log = []
     setpoint_log=[]
     time_log = []
-
-    time.sleep(2)
 
     while viewer.is_running():
         current_time = time.time() - start_time
