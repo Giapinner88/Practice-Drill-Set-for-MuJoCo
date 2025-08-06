@@ -43,6 +43,7 @@ Cài đặt bằng pip:
 pip install mujoco mujoco.viewer numpy time math itertools
 
 🧠 Nguyên lý điều khiển
+
 Swing-up: tính năng lượng động để tạo mô-men đưa con lắc lên cao.
 
 PID: được kích hoạt khi góc con lắc nằm trong khoảng ±10°, giúp giữ thăng bằng tại vị trí thẳng đứng.
