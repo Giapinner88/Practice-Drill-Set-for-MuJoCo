@@ -21,8 +21,8 @@ Chúng ta khai báo tài nguyên (assets) trước khi sử dụng chúng trong 
     <compiler angle="degree"/>
     
     <asset>
-        <mesh file="meshes/link1_visual.stl" name="mesh_vis"/>
-        <mesh file="meshes/link1_collision.stl" name="mesh_col"/>
+        <mesh file="assets/meshes/link1_visual.stl" name="mesh_vis"/>
+        <mesh file="assets/meshes/link1_collision.stl" name="mesh_col"/>
     </asset>
 
     <worldbody>
@@ -39,10 +39,10 @@ Chúng ta khai báo tài nguyên (assets) trước khi sử dụng chúng trong 
 
 ## 3. Phân tích Thẻ (Tag Analysis)
 
-    `<asset>`: Khu vực khai báo tập trung. Mọi tài nguyên như file lưới (`<mesh>`), vật liệu (`<material>`), hoặc họa tiết (`<texture>`) phải được tải vào bộ nhớ tại đây trước khi được gọi tên bởi các thẻ `<geom>` bên dưới. Điều này giúp tránh việc tải lặp lại cùng một file nhiều lần.
+- `<asset>`: Khu vực khai báo tập trung. Mọi tài nguyên như file lưới (`<mesh>`), vật liệu (`<material>`), hoặc họa tiết (`<texture>`) phải được tải vào bộ nhớ tại đây trước khi được gọi tên bởi các thẻ `<geom>` bên dưới. Điều này giúp tránh việc tải lặp lại cùng một file nhiều lần.
 
-    `<mesh file="...">`: Đường dẫn tương đối (relative path) tới file 3D. MuJoCo hỗ trợ tốt nhất định dạng `.stl` nhị phân (binary STL) để tối ưu tốc độ đọc.
+- `<mesh file="...">`: Đường dẫn tương đối (relative path) tới file 3D. MuJoCo hỗ trợ tốt nhất định dạng `.stl` nhị phân (binary STL) để tối ưu tốc độ đọc.
 
-    `contype="0" conaffinity="0"`: Đây là cơ chế Lọc Va chạm (Collision Filtering). Việc đặt cả hai giá trị về 0 yêu cầu engine bỏ qua lưới Visual Mesh này trong mọi phép thử giao tuyến (intersection tests).
+- `contype="0" conaffinity="0"`: Đây là cơ chế Lọc Va chạm (Collision Filtering). Việc đặt cả hai giá trị về 0 yêu cầu engine bỏ qua lưới Visual Mesh này trong mọi phép thử giao tuyến (intersection tests).
 
-    Thuộc tính group: Phân lớp hiển thị. Bạn có thể sử dụng giao diện người dùng (UI) của mujoco.viewer để bật/tắt hiển thị từng nhóm. Theo quy ước ngầm, nhóm 1 thường chứa hình ảnh đẹp, nhóm 3 chứa khung va chạm.
+- Thuộc tính group: Phân lớp hiển thị. Bạn có thể sử dụng giao diện người dùng (UI) của mujoco.viewer để bật/tắt hiển thị từng nhóm. Theo quy ước ngầm, nhóm 1 thường chứa hình ảnh đẹp, nhóm 3 chứa khung va chạm.

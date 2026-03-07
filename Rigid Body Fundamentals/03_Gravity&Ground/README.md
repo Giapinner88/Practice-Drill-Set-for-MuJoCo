@@ -23,23 +23,22 @@ Ngoài ra, ở mức độ quản lý tài nguyên tính toán (memory managemen
 ```
 
 ## 3. Phân tích Thẻ (Tag Analysis)
-`<compiler>`: Xác định các quy tắc biên dịch trước khi mô hình được đưa vào bộ giải.
+- `<compiler>`: Xác định các quy tắc biên dịch trước khi mô hình được đưa vào bộ giải.
+    - `angle="degree"`: Chuyển đổi hệ đo lường góc từ radian (mặc định của toán học) sang độ (dễ hình dung hơn đối với kỹ sư khi thiết lập tọa độ).
 
-    angle="degree": Chuyển đổi hệ đo lường góc từ radian (mặc định của toán học) sang độ (dễ hình dung hơn đối với kỹ sư khi thiết lập tọa độ).
+- `<option>`: Chứa các siêu tham số (hyperparameters) của môi trường vật lý.
 
-`<option>`: Chứa các siêu tham số (hyperparameters) của môi trường vật lý.
+    - `gravity="0 0 -9.81"`: Vector gia tốc trọng trường g​ theo 3 trục (X,Y,Z).
 
-    gravity="0 0 -9.81": Vector gia tốc trọng trường g​ theo 3 trục (X,Y,Z).
+    - `timestep="0.002"`: Bước thời gian tích phân $\delta t$. Giá trị càng nhỏ, mô phỏng càng chính xác nhưng tiêu tốn nhiều thời gian tính toán hơn.
 
-    timestep="0.002": Bước thời gian tích phân Δt. Giá trị càng nhỏ, mô phỏng càng chính xác nhưng tiêu tốn nhiều thời gian tính toán hơn.
+- `<size>`: Khai báo trước giới hạn bộ nhớ (Pre-allocation).
 
-`<size>`: Khai báo trước giới hạn bộ nhớ (Pre-allocation).
+    - `nconmax="100"`: Chỉ định số điểm tiếp xúc (contacts) tối đa mà engine được phép xử lý cùng lúc. Nếu số lượng va chạm vượt qua ngưỡng này, MuJoCo sẽ bỏ qua các va chạm dư thừa, dẫn đến hiện tượng vật thể xuyên thấu (penetration).
 
-    nconmax="100": Chỉ định số điểm tiếp xúc (contacts) tối đa mà engine được phép xử lý cùng lúc. Nếu số lượng va chạm vượt qua ngưỡng này, MuJoCo sẽ bỏ qua các va chạm dư thừa, dẫn đến hiện tượng vật thể xuyên thấu (penetration).
+- `<geom type="plane">`: Mặt phẳng vô hạn.
 
-`<geom type="plane">`: Mặt phẳng vô hạn.
-
-    Khác với hình hộp (box), kích thước size="10 10 0.1" của plane mang ý nghĩa: độ dài render theo trục X, độ dài render theo trục Y, và khoảng cách không gian lưới (grid spacing). Về mặt vật lý va chạm, mặt phẳng này mở rộng vô tận.
+    - Khác với hình hộp (box), kích thước `size="10 10 0.1"` của plane mang ý nghĩa: độ dài render theo trục X, độ dài render theo trục Y, và khoảng cách không gian lưới (grid spacing). Về mặt vật lý va chạm, mặt phẳng này mở rộng vô tận.
 
 **Vấn đề trao đổi**
 

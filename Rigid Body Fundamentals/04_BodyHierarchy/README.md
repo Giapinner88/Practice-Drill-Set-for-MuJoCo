@@ -19,13 +19,11 @@ Khối hộp tĩnh ở Bài 03 nay được bọc bên trong một thẻ `<body>
 ```
 
 ## 3. Phân tích Thẻ (Tag Analysis)
-`<body>`: Thực thể mang khối lượng.
+- `<body>`: Thực thể mang khối lượng.
+    - `pos="0 0 2"`: Tọa độ của hệ quy chiếu cục bộ (local frame) của body này so với hệ quy chiếu của cha nó (trong trường hợp này là worldbody). Việc tách tọa độ ra khỏi thẻ `<geom>` giúp quản lý chuyển động dễ dàng hơn.
 
-    pos="0 0 2": Tọa độ của hệ quy chiếu cục bộ (local frame) của body này so với hệ quy chiếu của cha nó (trong trường hợp này là worldbody). Việc tách tọa độ ra khỏi thẻ <geom> giúp quản lý chuyển động dễ dàng hơn.
-
-`<freejoint>`: Thẻ viết tắt (shortcut) cho một liên kết 6 bậc tự do (6-DOF).
-
-    Khớp này giải phóng hoàn toàn vật thể khỏi hệ quy chiếu gốc. Nó cung cấp cho body 3 tọa độ vị trí (X, Y, Z) và 4 tọa độ quaternion (biểu diễn góc quay 3D). Khi có freejoint, bộ giải (solver) sẽ bắt đầu nội suy ma trận khối lượng hữu hạn cho vật thể và tích phân các phương trình định luật II Newton.
+- `<freejoint>`: Thẻ viết tắt (shortcut) cho một liên kết 6 bậc tự do (6-DOF).
+    - Khớp này giải phóng hoàn toàn vật thể khỏi hệ quy chiếu gốc. Nó cung cấp cho body 3 tọa độ vị trí (X, Y, Z) và 4 tọa độ quaternion (biểu diễn góc quay 3D). Khi có freejoint, bộ giải (solver) sẽ bắt đầu nội suy ma trận khối lượng hữu hạn cho vật thể và tích phân các phương trình định luật II Newton.
 
 **Vấn đề thảo luận:**
 

@@ -1,16 +1,22 @@
-<mujoco model="mesh_loading_example">
-  
-  <option gravity="0 0 -9.81" timestep="0.002"/>
-  
-  <asset>
-    <mesh name="bunny_mesh" file="assets/bunny.stl" scale="0.1 0.1 0.1"/>
-  </asset>
+<mujoco model="mesh_loading">
+    <compiler angle="degree"/>
+    
+    <asset>
+        <mesh file="meshes/link1_visual.stl" name="mesh_vis" scale="0.01 0.01 0.01"/>
+        <mesh file="meshes/link1_collision.stl" name="mesh_col" scale="0.01 0.01 0.01"/>
+    </asset>
 
-  <worldbody>
-    <geom type="plane" size="5 5 0.1" rgba="0.8 0.9 0.8 1"/>
-    <body name="bunny_body" pos="0 0 1.5">
-      <geom type="mesh" mesh="bunny_mesh" rgba="1 0.6 0.3 1"/>
-    </body>
-  </worldbody>
+    <worldbody>
 
+        <light pos="0 0 5" dir="0 0 -1" directional="true"/>
+        <geom name="ground" type="plane" size="5 5 0.1" rgba="0.8 0.9 0.8 1"/>
+
+        <body name="robot_link_1" pos="0 0 1">
+            <freejoint/>
+            <!-- Geom hiển thị (visual) -->
+            <geom type="mesh" mesh="mesh_vis" contype="0" conaffinity="0" group="1" rgba="0.5 0.5 0.5 1"/>
+            <!-- Geom va chạm (collision) -->
+            <geom type="mesh" mesh="mesh_col" rgba="0 1 0 0.2" group="3"/>
+        </body>
+    </worldbody>
 </mujoco>

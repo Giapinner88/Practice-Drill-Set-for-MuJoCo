@@ -1,33 +1,53 @@
-<mujoco model="camera_modes_demo">
-  <worldbody>
+<mujoco model="camera_setup_improved">
+    <compiler angle="degree"/>
+    <option gravity="0 0 -9.81" timestep="0.002"/>
+    
+    <worldbody>
+        <light pos="0 0 5" dir="0 0 -1" directional="true"/>
+        <geom type="plane" size="5 5 0.1" rgba="0.8 0.9 0.8 1"/>
+        
+        <!-- Fixed camera nhìn xuống và hơi nghiêng -->
+        <camera name="fixed_cam" pos="0 -3 2" euler="55 0 0" fovy="60"/>
+        
+        <!-- Tracking camera (theo dõi box) -->
+        <camera name="tracking_cam" pos="0 -4 3" mode="targetbody" target="moving_box"/>
+        
+        <body name="moving_box" pos="0 0 0.5">
+            <joint name="slider" type="slide" axis="1 0 0" range="-2 2"/>
+            <geom type="box" size="0.2 0.2 0.2" rgba="0.2 0.8 0.2 1"/>
+            
+            <!-- Robot camera nhìn theo hướng +X của box -->
+            <camera name="robot_cam_forward" pos="0.3 0 0" xyaxes="0 -1 0 0 0 1" fovy="90"/>
+            
+            <!-- Robot camera nhìn lên trên -->
+            <camera name="robot_cam_up" pos="0 0 2" xyaxes="1 0 0 0 1 0" fovy="90"/>
+            
+            <!-- Visual: vẽ hướng camera bằng cylinder nhỏ -->
+            <geom type="cylinder" size="0.02 0.15" pos="0.25 0 0" 
+                  euler="0 90 0" rgba="1 0 0 0.5" contype="0" conaffinity="0"/>
+        </body>
 
-    <!-- Camera định hướng bằng xyaxes -->
-    <camera name="cam_xyaxes" pos="0 0 2" xyaxes="1 0 0 0 1 0"/>
-
-    <body name="center" pos="0 0 0">
-      <geom type="sphere" size="0.1" rgba="0.3 0.6 1 1"/>
-    </body>
-
-    <body name="moving" pos="1 0 0">
-
-      <!-- Camera bám theo COM của body moving -->
-      <camera name="cam_trackcom" mode="trackcom" pos="0 0 1" />
-
-      <joint name="slide_x" type="slide" axis="1 0 0"/>
-      <geom type="box" size="0.1 0.1 0.1" rgba="1 0.2 0.2 1"/>
-      <!-- gắn camera vào body này để dùng với targetbody -->
-
-      <!-- Camera luôn nhìn vào body "moving" -->
-      <camera name="cam_target" mode="targetbody" target="moving" pos="1 0 2" />
-    </body>
-
-    <!-- Camera cố định trong world body -->
-    <camera name="cam_fixed" pos="0 0 1" mode="fixed" />
-  </worldbody>
-
-  <actuator>
-    <motor joint="slide_x" ctrlrange="-1 1" ctrllimited="true"/>
-  </actuator>
-
-  <option gravity="0 0 -9.81"/>
+        <body name="marker_box" pos="0 0 0.5">
+            <geom type="box" size="0.1 0.1 0.1" pos="0 1 0" rgba="0.8 0.2 0.2 1"/>
+            <geom type="box" size="0.1 0.1 0.1" pos="-.5 1 0" rgba="0.8 0.2 0.2 1"/>
+            <geom type="box" size="0.1 0.1 0.1" pos=".5 1 0" rgba="0.8 0.2 0.2 1"/>
+            <geom type="box" size="0.1 0.1 0.1" pos="-1.0 1 0" rgba="0.8 0.2 0.2 1"/>
+            <geom type="box" size="0.1 0.1 0.1" pos="1.0 1 0" rgba="0.8 0.2 0.2 1"/>
+            <geom type="box" size="0.1 0.1 0.1" pos="-1.5 1 0" rgba="0.8 0.2 0.2 1"/>
+            <geom type="box" size="0.1 0.1 0.1" pos="1.5 1 0" rgba="0.8 0.2 0.2 1"/>
+            <geom type="box" size="0.1 0.1 0.1" pos="-2.0 1 0" rgba="0.8 0.2 0.2 1"/>
+            <geom type="box" size="0.1 0.1 0.1" pos="2.0 1 0" rgba="0.8 0.2 0.2 1"/>
+        </body>
+    </worldbody>
+    
+    <!-- THÊM ACTUATOR để điều khiển -->
+    <actuator>
+        <motor name="slide_motor" joint="slider" gear="100" ctrlrange="-1 1"/>
+    </actuator>
+    
+    <!-- THÊM SENSOR để đọc vị trí -->
+    <sensor>
+        <jointpos name="slider_pos" joint="slider"/>
+        <jointvel name="slider_vel" joint="slider"/>
+    </sensor>
 </mujoco>

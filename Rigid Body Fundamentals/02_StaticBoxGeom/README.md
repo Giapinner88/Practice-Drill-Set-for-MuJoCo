@@ -18,17 +18,16 @@ Một sai lầm phổ biến của người mới bắt đầu là nhầm tưở
 ```
 
 ## 3. Phân tích Thẻ (Tag Analysis)
+- `<geom>`: Thẻ định nghĩa hình khối hình học.
 
-    `<geom>`: Thẻ định nghĩa hình khối hình học.
+    - Thuộc tính `type="box"`: MuJoCo hỗ trợ các hình khối cơ bản (primitives) giúp tối ưu hóa tốc độ tính toán va chạm so với việc dùng lưới mesh phức tạp.
 
-        Thuộc tính `type="box"`: MuJoCo hỗ trợ các hình khối cơ bản (primitives) giúp tối ưu hóa tốc độ tính toán va chạm so với việc dùng lưới mesh phức tạp.
+    - Thuộc tính `size="0.5 0.5 0.5"`: Lưu ý rằng đối với box, các giá trị này là half-extents (một nửa chiều dài mỗi cạnh). Vậy khối hộp này thực tế có kích thước $1\time 1\time 1$ đơn vị chiều dài.
 
-        Thuộc tính `size="0.5 0.5 0.5"`: Lưu ý rằng đối với box, các giá trị này là half-extents (một nửa chiều dài mỗi cạnh). Vậy khối hộp này thực tế có kích thước 1×1×1 đơn vị chiều dài.
-
-        Thuộc tính `rgba`: Định nghĩa diện mạo. Alpha = 1 là vật thể đặc, Alpha < 1 sẽ làm vật thể trong suốt.
+    - Thuộc tính `rgba`: Định nghĩa diện mạo. `Alpha = 1` là vật thể đặc, `Alpha < 1` sẽ làm vật thể trong suốt.
 
 **Vấn đề trao đổi:**
 
-    **Câu hỏi đặt ra:** Tại sao khối hộp này không rơi dù có trọng lực mặc định?
+**Câu hỏi đặt ra:** Tại sao khối hộp này không rơi dù có trọng lực mặc định?
 
-    **Trả lời:** Vì nó chưa có bậc tự do (Degrees of Freedom). Trong MuJoCo, vật thể chỉ chuyển động khi nó được gắn vào một <body> và body đó phải có ít nhất một <joint>. Ở đây, geom nằm trực tiếp trong worldbody (vật thể có khối lượng vô hạn), nên nó đứng yên vĩnh viễn.
+**Trả lời:** Vì nó chưa có bậc tự do (Degrees of Freedom). Trong MuJoCo, vật thể chỉ chuyển động khi nó được gắn vào một <body> và body đó phải có ít nhất một <joint>. Ở đây, geom nằm trực tiếp trong worldbody (vật thể có khối lượng vô hạn), nên nó đứng yên vĩnh viễn.

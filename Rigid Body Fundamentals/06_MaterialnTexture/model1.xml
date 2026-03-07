@@ -1,0 +1,22 @@
+<mujoco model="material_and_texture">
+    <compiler angle="degree"/>
+    
+    <asset>
+        <texture name="tex_checker" type="2d" builtin="checker" rgb1="0.2 0.3 0.4" rgb2="0.8 0.8 0.8" width="512" height="512"/>
+        
+        <material name="mat_ground" texture="tex_checker" reflectance="0.3" specular="0.5" shininess="0.5"/>
+        
+        <material name="mat_metal" rgba="0.7 0.7 0.8 1" reflectance="0.8" metallic="0.8"/>
+    </asset>
+
+    <worldbody>
+        <light pos="0 0 5" dir="0 0 -1" directional="true" castshadow="true"/>
+        
+        <geom name="ground" type="plane" size="5 5 0.1" material="mat_ground"/>
+        
+        <body name="metal_sphere" pos="0 0 1">
+            <freejoint/>
+            <geom type="sphere" size="0.5" material="mat_metal"/>
+        </body>
+    </worldbody>
+</mujoco>

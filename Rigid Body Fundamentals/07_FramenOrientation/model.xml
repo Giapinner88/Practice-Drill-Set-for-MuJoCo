@@ -1,24 +1,31 @@
-<mujoco model="frame_orientation_example">
+<mujoco model="frames_and_orientation">
+    <compiler angle="degree"/> <worldbody>
+        <body name="reference_frame" pos="0 0 1">
+            
+            <geom type="box" size="0.2 0.2 0.2" pos="1 0 0" axisangle="0 0 1 45" rgba="1 0 0 1"/>
 
-  <option gravity="0 0 -9.81"/>
+            <geom type="box" size="0.2 0.2 0.2" pos="0 1 0" quat="0.92388 0 0 0.38268" rgba="0 1 0 1"/>
 
-  <compiler angle="radian"/>
+            <geom type="box" size="0.2 0.2 0.2" pos="-1 0 0" euler="0 0 45" rgba="0 0 1 1"/>
+            
+            <geom type="box" size="0.2 0.2 0.2" pos="0 -1 0" zaxis="1 1 1" rgba="1 1 0 1"/>
 
-  <worldbody>
-    <body name="root_body" pos="0 0 0">
-      
-      <geom type="sphere" size="0.1" rgba="0.2 0.5 0.8 1"/>
-      
-      <!-- body con màu đỏ, xoay bằng quaternion -->
-      <body name="child_body_quat" pos="0.5 0.5 0" quat="0.92388 0 0 0.38268">
-        <geom type="box" size="0.2 0.1 0.05" rgba="1 0 0 1"/>
-      </body>
-      
-      <!-- body con màu xanh, xoay bằng axisangle -->
-      <body name="child_body_axisangle" pos="0.5 -0.5 0" axisangle="0 0 1 -0.785">
-        <geom type="box" size="0.2 0.1 0.05" rgba="0 1 0 1"/>
-      </body>
-    
-    </body>
-  </worldbody>
+        </body>
+
+        <body name="ref" pos="-1 0 1">
+            <!-- Vẽ 3 trục XYZ bằng 3 cylinders -->
+            <body name="box1" pos="1 0 0">
+                <geom type="box" size="0.2 0.2 0.2" rgba="1 0 0 0.3"/>
+                <!-- X axis (đỏ) -->
+                <geom type="cylinder" size="0.01 0.3" rgba="1 0 0 1" 
+                      pos="0.3 0 0" euler="0 90 0"/>
+                <!-- Y axis (xanh lá) -->
+                <geom type="cylinder" size="0.01 0.3" rgba="0 1 0 1" 
+                      pos="0 0.3 0" euler="90 0 0"/>
+                <!-- Z axis (xanh dương) -->
+                <geom type="cylinder" size="0.01 0.3" rgba="0 0 1 1" 
+                      pos="0 0 0.3"/>
+            </body>
+        </body>
+    </worldbody>
 </mujoco>

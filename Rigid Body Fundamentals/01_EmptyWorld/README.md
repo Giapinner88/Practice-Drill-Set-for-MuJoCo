@@ -16,10 +16,9 @@ Bất kỳ một chuỗi động học (kinematic chain) nào được xây dự
 ```
 
 ## 3. Phân tích Thẻ (Tag Analysis)
+- <mujoco>: Thẻ gốc (root element). Định nghĩa ranh giới của toàn bộ mô hình. Thuộc tính model chỉ đóng vai trò định danh.
 
-<mujoco>: Thẻ gốc (root element). Định nghĩa ranh giới của toàn bộ mô hình. Thuộc tính model chỉ đóng vai trò định danh.
-
-<worldbody>: Đây là thẻ quan trọng nhất trong bài này. Nó đại diện cho môi trường vật lý tĩnh, có khối lượng vô hạn và không thể di chuyển. Tọa độ của <worldbody> mặc định nằm tại (0,0,0) trong không gian Descartes. Mọi vật thể được định nghĩa bên ngoài thẻ này sẽ bị trình biên dịch của MuJoCo từ chối.
+- <worldbody>: Đây là thẻ quan trọng nhất trong bài này. Nó đại diện cho môi trường vật lý tĩnh, có khối lượng vô hạn và không thể di chuyển. Tọa độ của <worldbody> mặc định nằm tại $(0,0,0)$ trong không gian Descartes. Mọi vật thể được định nghĩa bên ngoài thẻ này sẽ bị trình biên dịch của MuJoCo từ chối.
 
 **Vấn đề trao đổi:**
 Trong đoạn mã Python phía trên, tôi đã sử dụng vòng lặp `while viewer.is_running():` và gọi hàm `mujoco.mj_step(model, data)`. 
