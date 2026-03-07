@@ -1,0 +1,13 @@
+<mujoco model="ground_and_gravity">
+    <compiler angle="degree"/>
+    <option gravity="0 0 -9.81" timestep="0.002"/>
+    <size nconmax="100"/>
+
+    <worldbody>
+        <light pos="0 0 5" dir="0 0 -1" directional="true"/>
+        
+        <geom name="ground" type="plane" size="5 5 0.1" rgba="0.8 0.9 0.8 1"/>
+        
+        <geom name="floating_box" type="box" size="0.5 0.5 0.5" pos="0 0 2" rgba="0.8 0.2 0.2 1"/>
+    </worldbody>
+</mujoco>
