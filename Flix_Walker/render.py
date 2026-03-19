@@ -2,7 +2,7 @@ import mujoco
 import mujoco.viewer
 import time
 
-model = mujoco.MjModel.from_xml_path("/home/giap-ros/Mujoco/Practise/Controller/01_single_pendulum/model.xml")
+model = mujoco.MjModel.from_xml_path("//home/giap-ros/Flexible-Inverted-Pendulum/Flix_Walker/model.xml")
 data = mujoco.MjData(model)
 
 # Launch viewer
@@ -11,6 +11,7 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
 
     start = time.time()
     while viewer.is_running():
+
         step_start = time.time()
 
         mujoco.mj_step(model, data)

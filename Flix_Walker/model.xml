@@ -1,0 +1,263 @@
+<mujoco>
+	<option gravity="0 0 -10" timestep="0.001" iterations="200" />
+	<option timestep="0.001" iterations="150" />
+	<asset>
+		<material name="floor" texture="check1" texrepeat="2 2" texuniform="true" />
+		<texture name="check1" builtin="checker" type="2d" width="256" height="256" rgb1="1 1 1" rgb2="0 0 0" />
+
+
+		<material name="object" texture="check2" texrepeat="5 5" texuniform="true" />
+		<texture name="check2" builtin="checker" type="2d" width="256" height="256" rgb1="0 0 1" rgb2="0 1 0" />
+	</asset>
+	<worldbody>
+		<light diffuse=".5 .5 .5" pos="0 0 12" dir="0 0 -1" />
+		<geom name="floor" size="25 25 .05" type="plane" material="floor" condim="3" friction="0.8 0.1 0.1" />
+
+
+<body pos="0 0 .075">
+			<joint type="free" />
+			<geom type="box" mass="0.016" contype="0" conaffinity="0" rgba="0 1 1 .2" size="0.11 0.06 .00175" friction="0.8 0.1 0.1" /> 
+	
+	<body pos="0 0 0">
+	<geom type="cylinder" mass=".1" size=".03 .015" contype="0" conaffinity="0" rgba="0 1 1 .5" friction="0.8 0.1 0.1" /> 
+
+
+
+
+		
+		<body pos="0 0 0" name="rotor" euler="0 0 45">
+	
+			<geom type="sphere" mass=".15" material="object" size=".0025" friction="0.8 0.1 0.1" />
+
+
+			<body pos="0 -.014 .005">
+				<joint type="hinge" name="R1" damping="0.00000" axis="0 0 1" pos="0 .014 0" /> 
+				<geom type="box" mass="0.012" size=".0025 .014 .00125" rgba="1 0 0 1" friction="0.8 0.1 0.1" />
+			</body>
+
+
+			<body pos="0 -.014 -.005">
+				<joint type="hinge" name="R2" damping="0.00000" axis="0 0 -1" pos="0 .014 0" />
+				<geom type="box" mass="0.012" size=".0025 .014 .00125" rgba="0 1 0 1" friction="0.8 0.1 0.1" />
+			</body>
+
+
+		</body>
+	
+</body>
+	
+	
+	
+	<body pos="-0.10 -0.06 0.003">
+		
+		<joint type="hinge" name="X11" axis="-1 0 0" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+		
+		
+		<joint type="hinge" name="Z11" axis="0 0 -1" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+		<geom type="box" density="1200" size=".0083 .01 .0015" rgba="0 1 0 1" friction="0.8 0.1 0.1" />
+
+
+		<body pos="0 -.02 0" euler=" 0 45 0">
+			
+			<joint type="hinge" name="X12" axis="-1 0 0" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+			
+			<joint type="hinge" name="Y12" axis="0 -1 0" stiffness="0.183" damping="0.24" springref="0" pos="0 .01 0" />
+			
+			<joint type="hinge" name="Z12" axis="0 0 -1" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+			<geom type="box" density="1200" size=".0083 .01 .0015" rgba="0 1 0 1" friction="0.8 0.1 0.1" />
+
+
+			<body pos="0 -.02 0" euler=" 0 45 0">
+				
+				<joint type="hinge" name="X13" axis="-1 0 0" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+				
+				<joint type="hinge" name="Y13" axis="0 -1 0" stiffness="0.183" damping="0.24" springref="0" pos="0 .01 0" />
+				
+				<joint type="hinge" name="Z13" axis="0 0 -1" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+				<geom type="box" density="1200" size=".0083 .01 .0015" rgba="0 1 0 1" friction="0.8 0.1 0.1" />
+				
+
+
+				<body pos=".035 -.0085 -0.00" euler="90 90 0">
+
+
+					<geom type="box" density="1240" size=".0017 .0025 .0425" pos="-.0034 0 0" rgba="1 0 1 1" friction="0.8 0.1 0.1" solref="0.003 1.2" solimp="0.9 0.95 0.001" />
+					<geom type="box" density="1240" size=".0017 .0025 .0425" pos="0 0 0" rgba="1 0 0 1" friction="0.8 0.1 0.1" solref="0.003 1.2" solimp="0.9 0.95 0.001" />
+					<geom type="box" density="1240" size=".0017 .0025 .0425" pos=".0034 0 0" rgba="1 1 0 1" friction="0.8 0.1 0.1" solref="0.003 1.2" solimp="0.9 0.95 0.001" />
+
+
+					
+					<site name="S1" pos="0 0 0.0425" rgba="0 1 1 1" />
+
+
+				</body>
+
+
+			</body>
+		</body>
+	</body>
+
+
+
+
+	
+	<body pos="0.11 0.06 0.0035" euler="0 0 180">
+		
+		<joint type="hinge" name="X21" axis="-1 0 0" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+		
+		
+		<joint type="hinge" name="Z21" axis="0 0 -1" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+		
+		<geom type="box" density="1200" size=".0083 .01 .0015" rgba="0 1 0 1" friction="0.8 0.1 0.1" />
+
+
+		<body pos="0 -.02 0" euler=" 0 -45 0">
+			
+			<joint type="hinge" name="X22" axis="-1 0 0" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+			
+			<joint type="hinge" name="Y22" axis="0 -1 0" stiffness="0.183" damping="0.24" springref="0" pos="0 .01 0" />
+			
+			<joint type="hinge" name="Z22" axis="0 0 -1" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+			<geom type="box" density="1200" size=".0083 .01 .0015" rgba="0 1 0 1" friction="0.8 0.1 0.1" />
+
+
+			<body pos="0 -.02 0" euler=" 0 -45 0">
+				
+				<joint type="hinge" name="X23" axis="-1 0 0" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+				
+				<joint type="hinge" name="Y23" axis="0 -1 0" stiffness="0.183" damping="0.24" springref="0" pos="0 .01 0" />
+				
+				<joint type="hinge" name="Z23" axis="0 0 -1" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+				
+				<geom type="box" density="1200" size=".0083 .01 .0015" rgba="0 1 0 1" friction="0.8 0.1 0.1" />
+				
+				<body pos=" -.035 -.0085 -0.00" euler="90 90 0">
+					<geom type="box" density="1240" size=".0017 .0025 .0425" pos="-.0034 0 0" rgba="1 0 1 1" friction="0.8 0.1 0.1" solref="0.003 1.2" solimp="0.9 0.95 0.001" />
+					<geom type="box" density="1240" size=".0017 .0025 .0425" pos="0 0 0" rgba="1 0 0 1" friction="0.8 0.1 0.1" solref="0.003 1.2" solimp="0.9 0.95 0.001" />
+					<geom type="box" density="1240" size=".0017 .0025 .0425" pos=".0034 0 0" rgba="1 1 0 1" friction="0.8 0.1 0.1" solref="0.003 1.2" solimp="0.9 0.95 0.001" />
+					<site name="S2" pos="0 0 -0.0425" rgba="0 1 0 1" />
+				</body>
+
+
+			</body>
+		</body>
+	</body>
+
+
+	
+	<body pos="0.11 -0.06 0.0035">
+		
+		<joint type="hinge" name="X31" axis="-1 0 0" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+		
+		
+		<joint type="hinge" name="Z31" axis="0 0 -1" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+		
+		<geom type="box" density="1200" size=".0083 .01 .0015" rgba="0 1 0 1" friction="0.8 0.1 0.1" />
+
+
+		<body pos="0 -.02 0" euler=" 0 45 0">
+			
+			<joint type="hinge" name="X32" axis="-1 0 0" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+			
+			<joint type="hinge" name="Y32" axis="0 -1 0" stiffness="0.183" damping="0.24" springref="0" pos="0 .01 0" />
+			
+			<joint type="hinge" name="Z32" axis="0 0 -1" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+			
+			<geom type="box" density="1200" size=".0083 .01 .0015" rgba="0 1 0 1" friction="0.8 0.1 0.1" />
+
+
+			<body pos="0 -.02 0" euler=" 0 45 0">
+				
+				<joint type="hinge" name="X33" axis="-1 0 0" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+				
+				<joint type="hinge" name="Y33" axis="0 -1 0" stiffness="0.183" damping="0.24" springref="0" pos="0 .01 0" />
+				
+				<joint type="hinge" name="Z33" axis="0 0 -1" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+				<geom type="box" density="1200" size=".0083 .01 .0015" rgba="0 1 0 1" friction="0.8 0.1 0.1" />
+
+
+				
+				<body pos=" .035 -.0085 -0.00" euler="90 90 0">
+					<geom type="box" density="1240" size=".0017 .0025 .0425" pos="-.0034 0 0" rgba="1 0 1 1" friction="0.8 0.1 0.1" solref="0.003 1.2" solimp="0.9 0.95 0.001" />
+					<geom type="box" density="1240" size=".0017 .0025 .0425" pos="0 0 0" rgba="1 0 0 1" friction="0.8 0.1 0.1" solref="0.003 1.2" solimp="0.9 0.95 0.001" />
+					<geom type="box" density="1240" size=".0017 .0025 .0425" pos=".0034 0 0" rgba="1 1 0 1" friction="0.8 0.1 0.1" solref="0.003 1.2" solimp="0.9 0.95 0.001" />
+					<site name="S3" pos="0 0 0.0425" rgba="0 0 1 1" />
+				</body>
+
+
+			</body>
+		</body>
+	</body>
+
+
+	
+	<body pos="-0.1 0.06 0.0035" euler="0 0 180">
+		
+		<joint type="hinge" name="X41" axis="-1 0 0" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+		
+		
+		<joint type="hinge" name="Z41" axis="0 0 -1" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+		<geom type="box" density="1200" size=".0083 .01 .0015" rgba="0 1 0 1" friction="0.8 0.1 0.1" />
+
+
+		<body pos="0 -.02 0" euler=" 0 -45 0">
+			
+			<joint type="hinge" name="X42" axis="-1 0 0" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+			
+			<joint type="hinge" name="Y42" axis="0 -1 0" stiffness="0.183" damping="0.24" springref="0" pos="0 .01 0" />
+			
+			<joint type="hinge" name="Z42" axis="0 0 -1" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+			<geom type="box" density="1200" size=".0083 .01 .0015" rgba="0 1 0 1" friction="0.8 0.1 0.1" />
+
+
+			<body pos="0 -.02 0" euler=" 0 -45 0">
+				
+				<joint type="hinge" name="X43" axis="-1 0 0" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+				
+				<joint type="hinge" name="Y43" axis="0 -1 0" stiffness="0.183" damping="0.24" springref="0" pos="0 .01 0" />
+				
+				<joint type="hinge" name="Z43" axis="0 0 -1" stiffness="1.062072" damping="2.21209" springref="0" pos="0 .01 0" />
+				<geom type="box" density="1200" size=".0083 .01 .0015" rgba="0 1 0 1" friction="0.8 0.1 0.1" />
+				
+				<body pos=" -.035 -.0085 -0.00" euler="90 90 0">
+					<geom type="box" density="1240" size=".0017 .0025 .0425" pos="-.0034 0 0" rgba="1 0 1 1" friction="0.8 0.1 0.1" solref="0.003 1.2" solimp="0.9 0.95 0.001" />
+					<geom type="box" density="1240" size=".0017 .0025 .0425" pos="0 0 0" rgba="1 0 0 1" friction="0.8 0.1 0.1" solref="0.003 1.2" solimp="0.9 0.95 0.001" />
+					<geom type="box" density="1240" size=".0017 .0025 .0425" pos=".0034 0 0" rgba="1 1 0 1" friction="0.8 0.1 0.1" solref="0.003 1.2" solimp="0.9 0.95 0.001" />
+					<site name="S4" pos="0 0 -0.0425" rgba="1 1 1 1" />
+				</body>
+
+
+			</body>
+		</body>
+	</body>
+
+
+
+
+</body>
+
+
+	</worldbody>
+
+
+	<equality>
+		<joint joint1="R1" joint2="R2" polycoef="0 1 0 0 0" />
+	</equality>
+
+
+	<actuator>
+		<motor joint="R1" gear="0.1" />
+		<motor joint="R2" gear="0.1" />
+	
+	</actuator>
+	
+	<sensor>
+		<force name="Site1" site="S1" />
+		<force name="Site2" site="S2" />
+		<force name="Site3" site="S3" />
+		<force name="Site4" site="S4" />
+	</sensor>
+	
+
+
+</mujoco>
