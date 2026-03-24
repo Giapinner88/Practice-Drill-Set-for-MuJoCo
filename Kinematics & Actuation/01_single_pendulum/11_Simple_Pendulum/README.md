@@ -19,7 +19,7 @@ $$\dot{x}_{1} = x_{2}$$
 
 $$\dot{x}_{2} = f(x_{1}, x_{2})$$
 
-Với $x_{1} = \theta$ và $x_{2} = \dot{\theta}$. Không gian đồ họa tạo bởi vector $[\dot{x}_{1}, \dot{x}_{2}]^{T}$ được gọi là **Không gian pha (Phase portrait)**.
+Với $x_{1} = \theta$ và $x_{2} = \dot{\theta}$. Không gian đồ họa tạo bởi vector $[\dot{x}_1,\dot{x}_2]^{T}$ được gọi là **Không gian pha (Phase portrait)**.
 
 Khi quan sát không gian pha (trường hợp $u=0$), hệ thống có các điểm cân bằng (fixed points) tại các vị trí $\dot{x} = 0$. 
 * Điểm hướng xuống ($\theta = 0, \pm 2\pi...$) là điểm ổn định theo nghĩa Lyapunov (stable i.s.L.). Nếu có thêm ma sát ($b > 0$), nó trở thành điểm ổn định tiệm cận (asymptotically stable).
