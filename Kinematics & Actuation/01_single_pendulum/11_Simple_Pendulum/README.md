@@ -1,20 +1,20 @@
 # Bài 11: Simple Pendulum (Hệ Động Lực Học, Không Gian Pha và Cấu Trúc Năng Lượng)
 
 ## 1. Phương trình Chuyển động (Equations of Motion)
-Mục tiêu của chương này là hiểu rõ động lực học của một con lắc đơn[cite: 13]. Hệ thống này đủ phong phú để giới thiệu các khái niệm về động lực học phi tuyến, nhưng cũng đủ tường minh để có thể phân tích cặn kẽ[cite: 15].
+Mục tiêu của chương này là hiểu rõ động lực học của một con lắc đơn. Hệ thống này đủ phong phú để giới thiệu các khái niệm về động lực học phi tuyến, nhưng cũng đủ tường minh để có thể phân tích cặn kẽ.
 
 Sử dụng phương pháp Lagrangian, phương trình động lực học của con lắc (với khối lượng $m$, chiều dài $l$) được viết dưới dạng:
-$$ml^{2}\ddot{\theta}(t) + mgl \sin \theta(t) = Q$$ [cite: 21, 22]
+$$ml^{2}\ddot{\theta}(t) + mgl \sin \theta(t) = Q$$
 
 Trong đó, lực suy rộng $Q$ bao gồm momen cản (do ma sát) và tín hiệu điều khiển chủ động $u(t)$: $Q = -b\dot{\theta}(t) + u(t)$[cite: 23, 24]. Từ đó ta có phương trình chuẩn:
-$$ml^{2}\ddot{\theta} + b\dot{\theta} + mgl \sin \theta = u$$ [cite: 27]
+$$ml^{2}\ddot{\theta} + b\dot{\theta} + mgl \sin \theta = u$$
 
 ## 2. Không gian Pha (Phase Portrait)
 
 Hệ thống con lắc là một hệ bậc hai, có thể được biểu diễn dưới dạng hệ phương trình bậc nhất hai chiều:
 $$\dot{x}_{1} = x_{2}$$
-$$\dot{x}_{2} = f(x_{1}, x_{2})$$ [cite: 140]
-Với $x_{1} = \theta$ và $x_{2} = \dot{\theta}$[cite: 141]. Không gian đồ họa tạo bởi vector $[\dot{x}_{1}, \dot{x}_{2}]^{T}$ được gọi là **Không gian pha (Phase portrait)**[cite: 141, 142].
+$$\dot{x}_{2} = f(x_{1}, x_{2})$$
+Với $x_{1} = \theta$ và $x_{2} = \dot{\theta}$[cite: 141]. Không gian đồ họa tạo bởi vector $[\dot{x}_{1}, \dot{x}_{2}]^{T}$ được gọi là **Không gian pha (Phase portrait)**.
 
 Khi quan sát không gian pha (trường hợp $u=0$), hệ thống có các điểm cân bằng (fixed points) tại các vị trí $\dot{x} = 0$. 
 * Điểm hướng xuống ($\theta = 0, \pm 2\pi...$) là điểm ổn định theo nghĩa Lyapunov (stable i.s.L.). Nếu có thêm ma sát ($b > 0$), nó trở thành điểm ổn định tiệm cận (asymptotically stable).
