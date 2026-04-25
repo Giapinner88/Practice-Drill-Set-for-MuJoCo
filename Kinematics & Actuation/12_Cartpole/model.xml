@@ -1,0 +1,44 @@
+<mujoco model="cartpole_energy_lqr">
+    <option timestep="0.002" integrator="RK4" gravity="0 0 -9.81"/>
+    
+    <visual>
+        <map znear="0.01" zfar="5"/>
+    </visual>
+
+    <worldbody>
+        <light pos="0 -2 3" dir="0 1 -1" directional="true" castshadow="true"/>
+        <geom name="floor" type="plane" size="2 2 0.1" rgba="0.8 0.9 0.8 1" contype="1" conaffinity="1"/>
+        
+        <camera name="cam_side" pos="0 -3 1.0" quat="0.7071 0.7071 0 0"/>
+        
+        <geom name="rail" type="capsule" fromto="-2 0 1.0  2 0 1.0" size="0.01" rgba="0.3 0.3 0.3 1" contype="0" conaffinity="0"/>
+
+        <body name="cart" pos="0 0 1.0">
+            <joint name="slider" type="slide" axis="1 0 0" damping="0.0"/>
+            
+            <inertial pos="0 0 0" mass="1.0" diaginertia="0.01 0.01 0.01"/>
+            <geom name="cart_geom" type="box" size="0.1 0.05 0.05" rgba="0.1 0.1 0.9 1"/>
+            
+            <body name="pole" pos="0 0 0">
+                <joint name="hinge" type="hinge" axis="0 1 0" pos="0 0 0" damping="0.0"/>
+                
+                <inertial pos="0 0 -0.5" mass="1.0" diaginertia="1e-6 1e-6 1e-6"/>
+                
+                <geom type="cylinder" fromto="0 0 0  0 0 -0.5" size="0.01" rgba="0.5 0.5 0.5 1" contype="0" conaffinity="0"/>
+                
+                <geom type="sphere" pos="0 0 -0.5" size="0.05" rgba="0.8 0.2 0.2 1"/>
+            </body>
+        </body>
+    </worldbody>
+
+    <actuator>
+        <motor name="force_x" joint="slider" gear="1" ctrllimited="true" ctrlrange="-10.0 10.0"/>
+    </actuator>
+
+    <sensor>
+        <jointpos joint="slider" name="sens_x"/>
+        <jointvel joint="slider" name="sens_x_dot"/>
+        <jointpos joint="hinge" name="sens_theta"/>
+        <jointvel joint="hinge" name="sens_theta_dot"/>
+    </sensor>
+</mujoco>
