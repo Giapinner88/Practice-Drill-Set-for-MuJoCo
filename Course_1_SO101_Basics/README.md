@@ -5,7 +5,8 @@ Bài học tối giản nhất về MuJoCo, dùng cánh tay robot **SO-101** (5 
 ```
 Course_1_SO101_Basics/
 ├── model.xml      # Toàn bộ mô tả robot + scene, một file duy nhất
-├── simulate.py    # Vòng lặp mô phỏng + viewer
+├── simulate.py    # ★ BẮT ĐẦU TỪ ĐÂY - form chuẩn, bạn tự chỉnh góc
+├── demo.py        # Bản mở rộng: cho 6 khớp dao động sin tự động
 ├── README.md
 └── assets/        # 13 file mesh STL của SO-101
 ```
@@ -13,10 +14,41 @@ Course_1_SO101_Basics/
 ## Chạy thử
 
 ```bash
-python simulate.py
+python simulate.py     # robot đứng ở một tư thế cố định - bạn tự đổi góc
+python demo.py         # robot tự chuyển động, in thông số ra màn hình
 ```
 
 Cần `pip install mujoco`. Nhấn **ESC** tại cửa sổ viewer để thoát.
+
+### Học bằng cách nghịch `simulate.py`
+
+Mở [`simulate.py`](simulate.py), bạn sẽ thấy khối này ở ngay đầu file:
+
+```python
+TARGET = [
+    0.0,   # shoulder_pan    [-1.92, +1.92]   xoay đế trái/phải
+    -1.0,  # shoulder_lift   [-1.75, +1.75]   nâng/hạ vai
+    1.0,   # elbow_flex      [-1.69, +1.69]   gập khuỷu tay
+    0.5,   # wrist_flex      [-1.66, +1.66]   gập cổ tay lên/xuống
+    0.0,   # wrist_roll      [-2.74, +2.84]   xoay cổ tay
+    0.3,   # gripper         [-0.17, +1.75]   0.0 = kẹp đóng, 1.75 = mở hết
+]
+```
+
+Sửa **một** số, chạy lại, xem khớp nào cử động. Đây là cách nhanh nhất để cảm nhận từng bậc tự do trước khi đọc lý thuyết bên dưới.
+
+Vài tư thế đáng thử:
+
+| `TARGET` | Kết quả |
+|---|---|
+| `[0, 0, 0, 0, 0, 0]` | Tư thế gốc — cánh tay duỗi thẳng |
+| `[0, -1.5, 1.5, 0, 0, 0]` | Cuộn gọn lại |
+| `[1.5, -1.0, 1.0, 0.5, 0, 0.3]` | Xoay hẳn sang một bên |
+| `[0, -1.0, 1.0, 0.5, 0, 1.75]` | Giống mặc định nhưng **mở hết kẹp** |
+
+Đổi số cuối giữa `0.0` và `1.75` là thấy rõ kẹp đóng/mở nhất.
+
+> Đơn vị là **radian**, không phải độ. 90° = 1.57 rad, 45° = 0.79 rad. Vượt quá khoảng cho phép thì khớp chỉ dừng ở giới hạn, không hỏng gì cả.
 
 ---
 
@@ -57,11 +89,11 @@ Mọi file MJCF bắt đầu bằng thẻ này. Thuộc tính `model` chỉ là 
 
 Thẻ này **không mô tả robot**, nó dặn MuJoCo cách *hiểu* các con số trong file. Rất dễ bị bỏ qua nhưng sai một thuộc tính là robot méo hoàn toàn.
 
-| Thuộc tính | Ý nghĩa |
-|---|---|
-| `angle="radian"` | Mọi góc trong file tính bằng **radian**. Nếu đổi thành `"degree"` thì `range="-1.69 1.69"` sẽ bị hiểu là ±1.69 **độ** — khớp gần như không nhúc nhích. |
-| `meshdir="assets"` | Tìm file `.stl` trong thư mục `assets/`. Nhờ nó mà `<mesh file="base_so101_v2.stl"/>` viết gọn được, khỏi ghi đường dẫn dài. |
-| `autolimits="true"` | Hễ khớp có `range` thì tự động coi là bị giới hạn, khỏi phải ghi thêm `limited="true"`. |
+| Thuộc tính          | Ý nghĩa                                                                                                                                                                                    |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `angle="radian"`    | Mọi góc trong file tính bằng**radian**. Nếu đổi thành `"degree"` thì `range="-1.69 1.69"` sẽ bị hiểu là ±1.69 **độ** — khớp gần như không nhúc nhích. |
+| `meshdir="assets"`  | Tìm file`.stl` trong thư mục `assets/`. Nhờ nó mà `<mesh file="base_so101_v2.stl"/>` viết gọn được, khỏi ghi đường dẫn dài.                                           |
+| `autolimits="true"` | Hễ khớp có`range` thì tự động coi là bị giới hạn, khỏi phải ghi thêm `limited="true"`.                                                                                     |
 
 > **Đơn vị trong MuJoCo:** mét, kilôgam, giây. Không có thuộc tính nào để đổi. Vì vậy `pos="0 0 0.0624"` nghĩa là 6.24 **cm**, và `mass="0.147"` là 147 **gram**. SO-101 nặng tổng cộng 0.632 kg — con số hợp lý cho một cánh tay in 3D để bàn.
 
@@ -91,11 +123,11 @@ Thẻ này **không mô tả robot**, nó dặn MuJoCo cách *hiểu* các con s
 <body name="upper_arm" pos="-0.0304 -0.0183 -0.0542" quat="0.5 -0.5 -0.5 -0.5">
 ```
 
-| Thuộc tính | Ý nghĩa |
-|---|---|
-| `name` | Tên để tra cứu trong Python: `mj_name2id(model, mjOBJ_BODY, "upper_arm")` |
-| `pos` | Vị trí `(x, y, z)` mét |
-| `quat` | Hướng xoay, dạng quaternion `(w, x, y, z)` |
+| Thuộc tính | Ý nghĩa                                                                      |
+| ------------ | ------------------------------------------------------------------------------ |
+| `name`     | Tên để tra cứu trong Python:`mj_name2id(model, mjOBJ_BODY, "upper_arm")` |
+| `pos`      | Vị trí`(x, y, z)` mét                                                     |
+| `quat`     | Hướng xoay, dạng quaternion`(w, x, y, z)`                                 |
 
 **Điểm mấu chốt dễ nhầm nhất:** `pos` và `quat` là **tương đối so với body cha**, không phải toạ độ thế giới. `upper_arm` có `pos="-0.0304 ..."` nghĩa là "lệch 3 cm so với `shoulder`", chứ không phải "ở toạ độ âm trong không gian".
 
@@ -153,34 +185,34 @@ Chú ý `base` **không có `<joint>`**. Body không có joint thì bị **hàn 
 <joint axis="0 0 1" name="elbow_flex" type="hinge" range="-1.69 1.69" class="sts3215"/>
 ```
 
-| Thuộc tính | Ý nghĩa |
-|---|---|
-| `type="hinge"` | Khớp bản lề — quay quanh một trục, giống bản lề cửa. 1 bậc tự do. |
-| `axis="0 0 1"` | Trục quay, biểu diễn **trong hệ toạ độ của body**. `0 0 1` là trục Z. |
-| `range="-1.69 1.69"` | Giới hạn góc quay (radian, do `angle="radian"`). Khoảng ±97°. |
-| `class="sts3215"` | Kế thừa các thuộc tính vật lý từ `<default>` — xem mục 5. |
+| Thuộc tính           | Ý nghĩa                                                                              |
+| ---------------------- | -------------------------------------------------------------------------------------- |
+| `type="hinge"`       | Khớp bản lề — quay quanh một trục, giống bản lề cửa. 1 bậc tự do.          |
+| `axis="0 0 1"`       | Trục quay, biểu diễn**trong hệ toạ độ của body**. `0 0 1` là trục Z. |
+| `range="-1.69 1.69"` | Giới hạn góc quay (radian, do`angle="radian"`). Khoảng ±97°.                   |
+| `class="sts3215"`    | Kế thừa các thuộc tính vật lý từ`<default>` — xem mục 5.                   |
 
 Cả 6 khớp SO-101 đều dùng `axis="0 0 1"`. Nghe lạ, vì thực tế chúng quay theo nhiều hướng khác nhau. Lý do: mỗi body đã được **xoay sẵn** bằng thuộc tính `quat`, nên trục Z *cục bộ* của mỗi body đã chỉ đúng hướng mong muốn rồi. Đây là quy ước chuẩn của công cụ sinh file tự động.
 
 Các loại `type` thường gặp:
 
-| `type` | Mô tả | Số DOF |
-|---|---|---|
-| `hinge` | Quay quanh 1 trục (mặc định) | 1 |
-| `slide` | Trượt dọc 1 trục | 1 |
-| `ball` | Khớp cầu, quay tự do | 3 |
-| `free` | Bay tự do trong không gian | 6 |
+| `type`  | Mô tả                          | Số DOF |
+| --------- | -------------------------------- | ------- |
+| `hinge` | Quay quanh 1 trục (mặc định) | 1       |
+| `slide` | Trượt dọc 1 trục             | 1       |
+| `ball`  | Khớp cầu, quay tự do          | 3       |
+| `free`  | Bay tự do trong không gian     | 6       |
 
 Giới hạn 6 khớp của SO-101:
 
-| Khớp | `range` (rad) | Tương đương |
-|---|---|---|
-| `shoulder_pan` | ±1.92 | ±110° |
-| `shoulder_lift` | ±1.75 | ±100° |
-| `elbow_flex` | ±1.69 | ±97° |
-| `wrist_flex` | ±1.66 | ±95° |
-| `wrist_roll` | −2.74 … +2.84 | −157° … +163° |
-| `gripper` | −0.17 … +1.75 | −10° … +100° (đóng/mở kẹp) |
+| Khớp             | `range` (rad) | Tương đương                   |
+| ----------------- | --------------- | ---------------------------------- |
+| `shoulder_pan`  | ±1.92          | ±110°                            |
+| `shoulder_lift` | ±1.75          | ±100°                            |
+| `elbow_flex`    | ±1.69          | ±97°                             |
+| `wrist_flex`    | ±1.66          | ±95°                             |
+| `wrist_roll`    | −2.74 … +2.84 | −157° … +163°                  |
+| `gripper`       | −0.17 … +1.75 | −10° … +100° (đóng/mở kẹp) |
 
 ### 3.4. `<geom>` — hình khối
 
@@ -191,13 +223,13 @@ Giới hạn 6 khớp của SO-101:
       mesh="upper_arm_so101_v1" material="upper_arm_so101_v1_material"/>
 ```
 
-| Thuộc tính | Ý nghĩa |
-|---|---|
-| `type` | Loại hình: `mesh`, `box`, `sphere`, `cylinder`, `capsule`, `plane` |
-| `mesh` | Nếu `type="mesh"`, trỏ tới tên mesh khai báo trong `<asset>` |
-| `pos`, `quat` | Vị trí/hướng của hình khối **so với body chứa nó** |
-| `material` | Màu sắc, độ bóng — khai báo trong `<asset>` |
-| `class` | Kế thừa từ `<default>` |
+| Thuộc tính      | Ý nghĩa                                                                       |
+| ----------------- | ------------------------------------------------------------------------------- |
+| `type`          | Loại hình:`mesh`, `box`, `sphere`, `cylinder`, `capsule`, `plane` |
+| `mesh`          | Nếu`type="mesh"`, trỏ tới tên mesh khai báo trong `<asset>`            |
+| `pos`, `quat` | Vị trí/hướng của hình khối**so với body chứa nó**               |
+| `material`      | Màu sắc, độ bóng — khai báo trong`<asset>`                             |
+| `class`         | Kế thừa từ`<default>`                                                      |
 
 Một body có thể chứa **nhiều geom**. Chẳng hạn `shoulder` gồm 3 mảnh: vỏ động cơ, giá đỡ, khớp xoay. Chúng gắn cứng với nhau thành một khâu duy nhất.
 
@@ -244,11 +276,11 @@ Trong viewer, nhấn phím **`0`–`4`** để bật/tắt từng group. Nhấn 
           fullinertia="4.08e-05 1.47e-04 1.42e-04 -1.98e-05 -4.03e-08 8.97e-09"/>
 ```
 
-| Thuộc tính | Ý nghĩa |
-|---|---|
-| `mass` | Khối lượng (kg). `0.103` = 103 gram. |
-| `pos` | Vị trí **trọng tâm** so với gốc body |
-| `fullinertia` | 6 phần tử của ma trận quán tính: `Ixx Iyy Izz Ixy Ixz Iyz` |
+| Thuộc tính    | Ý nghĩa                                                         |
+| --------------- | ----------------------------------------------------------------- |
+| `mass`        | Khối lượng (kg).`0.103` = 103 gram.                          |
+| `pos`         | Vị trí**trọng tâm** so với gốc body                   |
+| `fullinertia` | 6 phần tử của ma trận quán tính:`Ixx Iyy Izz Ixy Ixz Iyz` |
 
 Quán tính quyết định vật **khó quay** đến mức nào — tương tự khối lượng quyết định vật khó đẩy đến mức nào. Những con số này lấy từ phần mềm CAD, không cần tự tính tay.
 
@@ -359,11 +391,11 @@ kp         = 998.22            ← lấy từ class sts3215
 
 Ba thuộc tính vật lý của khớp, giải thích ngắn:
 
-| Thuộc tính | Ý nghĩa |
-|---|---|
-| `damping` | Cản nhớt — lực cản tỉ lệ vận tốc, giúp khớp không dao động mãi |
-| `frictionloss` | Ma sát khô — lực cản cố định, phải vượt qua nó khớp mới bắt đầu nhúc nhích |
-| `armature` | Quán tính rotor động cơ. Rất quan trọng cho **ổn định số**: thiếu nó, servo `kp` lớn dễ làm mô phỏng nổ. |
+| Thuộc tính     | Ý nghĩa                                                                                                                          |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `damping`      | Cản nhớt — lực cản tỉ lệ vận tốc, giúp khớp không dao động mãi                                                      |
+| `frictionloss` | Ma sát khô — lực cản cố định, phải vượt qua nó khớp mới bắt đầu nhúc nhích                                      |
+| `armature`     | Quán tính rotor động cơ. Rất quan trọng cho**ổn định số**: thiếu nó, servo `kp` lớn dễ làm mô phỏng nổ. |
 
 ---
 
@@ -378,16 +410,18 @@ Body và joint mô tả *cấu trúc*. `<actuator>` là thứ khiến robot **ch
 </actuator>
 ```
 
-| Thuộc tính | Ý nghĩa |
-|---|---|
-| `<position>` | Loại actuator: điều khiển **vị trí** (servo) |
-| `joint` | Khớp mà nó truyền động |
-| `ctrlrange` | Khoảng giá trị hợp lệ của `data.ctrl` — nên khớp với `range` của joint |
-| `forcerange` | Moment tối đa (N·m). Servo STS3215 thật cho ~3.35 N·m. |
+| Thuộc tính   | Ý nghĩa                                                                            |
+| -------------- | ------------------------------------------------------------------------------------ |
+| `<position>` | Loại actuator: điều khiển**vị trí** (servo)                              |
+| `joint`      | Khớp mà nó truyền động                                                         |
+| `ctrlrange`  | Khoảng giá trị hợp lệ của`data.ctrl` — nên khớp với `range` của joint |
+| `forcerange` | Moment tối đa (N·m). Servo STS3215 thật cho ~3.35 N·m.                          |
 
 **Điểm quan trọng nhất cần nắm:** với `<position>`, `data.ctrl[i]` **không phải moment xoắn** mà là **vị trí mục tiêu** tính bằng radian. MuJoCo tự chạy bộ điều khiển PD bên trong:
 
-$$\tau = k_p(\text{ctrl} - q) - k_v\dot{q}$$
+$$
+\tau = k_p(\text{ctrl} - q) - k_v\dot{q}
+$$
 
 với `kp = 998.22`, `kv = 2.731` kế thừa từ class `sts3215`, và `τ` bị chặn trong `forcerange`.
 
@@ -395,11 +429,11 @@ Hệ quả thực tế: robot **không bám lệnh tuyệt đối**. Nếu `ctrl
 
 Ba loại actuator thường gặp:
 
-| Thẻ | `data.ctrl` mang ý nghĩa | Dùng khi |
-|---|---|---|
-| `<position>` | Vị trí mục tiêu (rad hoặc m) | Servo, cánh tay robot |
-| `<motor>` | Moment/lực trực tiếp (N·m) | Điều khiển moment, học tăng cường |
-| `<velocity>` | Vận tốc mục tiêu | Bánh xe, băng chuyền |
+| Thẻ           | `data.ctrl` mang ý nghĩa      | Dùng khi                                |
+| -------------- | --------------------------------- | ---------------------------------------- |
+| `<position>` | Vị trí mục tiêu (rad hoặc m) | Servo, cánh tay robot                   |
+| `<motor>`    | Moment/lực trực tiếp (N·m)    | Điều khiển moment, học tăng cường |
+| `<velocity>` | Vận tốc mục tiêu              | Bánh xe, băng chuyền                  |
 
 `model.nu` = số actuator = 6, đúng bằng độ dài `data.ctrl`.
 
@@ -427,12 +461,12 @@ Thẻ này thuần **thẩm mỹ**, không đụng gì tới vật lý. `<headli
 
 Đây là khái niệm quan trọng nhất phía Python.
 
-| | `mjModel` | `mjData` |
-|---|---|---|
-| Bản chất | Phần **tĩnh** | Phần **động** |
-| Chứa gì | Cây động học, khối lượng, mesh, giới hạn khớp, actuator | `qpos`, `qvel`, `ctrl`, lực, `time` |
-| Thay đổi khi chạy? | Không | Có, mỗi timestep |
-| Tạo bằng | `MjModel.from_xml_path("model.xml")` | `MjData(model)` |
+|                       | `mjModel`                                                       | `mjData`                                   |
+| --------------------- | ----------------------------------------------------------------- | -------------------------------------------- |
+| Bản chất            | Phần**tĩnh**                                              | Phần**động**                        |
+| Chứa gì             | Cây động học, khối lượng, mesh, giới hạn khớp, actuator | `qpos`, `qvel`, `ctrl`, lực, `time` |
+| Thay đổi khi chạy? | Không                                                            | Có, mỗi timestep                           |
+| Tạo bằng            | `MjModel.from_xml_path("model.xml")`                            | `MjData(model)`                            |
 
 ```python
 model = mujoco.MjModel.from_xml_path("model.xml")   # biên dịch XML một lần
@@ -443,7 +477,7 @@ data  = mujoco.MjData(model)                        # cấp phát bộ nhớ tr�
 
 ## 9. Không gian trạng thái
 
-Chạy `simulate.py`, chương trình in ra:
+Chạy `demo.py`, chương trình in ra:
 
 ```
 nq (số toạ độ vị trí) = 6
@@ -472,11 +506,11 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
 
 Ba hàm cần phân biệt rõ:
 
-| Hàm | Tác dụng |
-|---|---|
-| `mj_forward` | Tính vị trí body, ma trận quán tính, lực… từ `qpos`/`qvel` hiện tại. **Không** tiến thời gian. Dùng sau khi đặt tư thế thủ công. |
-| `mj_step` | Tích phân hệ đi một timestep. `data.time` tăng lên. |
-| `viewer.sync` | Chỉ vẽ lại. Không ảnh hưởng vật lý. |
+| Hàm            | Tác dụng                                                                                                                                                     |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mj_forward`  | Tính vị trí body, ma trận quán tính, lực… từ`qpos`/`qvel` hiện tại. **Không** tiến thời gian. Dùng sau khi đặt tư thế thủ công. |
+| `mj_step`     | Tích phân hệ đi một timestep.`data.time` tăng lên.                                                                                                    |
+| `viewer.sync` | Chỉ vẽ lại. Không ảnh hưởng vật lý.                                                                                                                   |
 
 `launch_passive` nghĩa là **bạn** giữ quyền điều khiển vòng lặp (viewer chỉ hiển thị thụ động). Đối lập với `launch`, khi MuJoCo tự chạy vòng lặp riêng.
 
@@ -498,7 +532,7 @@ Model này **không khai báo `<option>`**, nên MuJoCo dùng mặc định: `ti
 
 **Bài 5 — Độ cứng bộ điều khiển.** Sửa `kp` của class `sts3215` từ `998.22` xuống `100`, rồi lên `5000`. `kp` nhỏ thì cánh tay võng và trễ; `kp` lớn thì bám sát hơn nhưng có thể dao động hoặc mất ổn định số.
 
-**Bài 6 — Giới hạn khớp.** Bỏ đoạn kẹp `min(max(target, lo), hi)` trong `simulate.py` và tăng biên độ sin lên `2.0`. Khớp có vượt quá `range` không? MuJoCo xử lý giới hạn khớp như ràng buộc **mềm**, không phải tường cứng tuyệt đối.
+**Bài 6 — Giới hạn khớp.** Trong `simulate.py`, đặt `TARGET[0] = 5.0` (vượt xa `range` ±1.92). Khớp dừng ở đâu? Rồi mở `demo.py`, bỏ đoạn kẹp `min(max(target, lo), hi)` và tăng biên độ sin lên `2.0` — khớp có vượt quá `range` không? MuJoCo xử lý giới hạn khớp như ràng buộc **mềm**, không phải tường cứng tuyệt đối.
 
 **Bài 7 — Trọng lực.** Thêm `<option gravity="0 0 0"/>` ngay sau `<compiler>`. Sai số bám ở Bài 2 thay đổi thế nào? Kết quả chứng minh điều gì về nguồn gốc sai số?
 
@@ -510,25 +544,25 @@ Model này **không khai báo `<option>`**, nên MuJoCo dùng mặc định: `ti
 
 ## Bảng tra nhanh các thẻ
 
-| Thẻ | Thuộc | Vai trò |
-|---|---|---|
-| `<mujoco>` | gốc | Bọc toàn bộ file |
-| `<compiler>` | gốc | Quy ước đọc file: đơn vị góc, thư mục mesh |
-| `<visual>` | gốc | Thiết lập hiển thị toàn cục |
-| `<default>` | gốc | Giá trị mặc định dùng chung, tránh lặp |
-| `<worldbody>` | gốc | Thế giới vật lý |
-| `<asset>` | gốc | Kho mesh, texture, material |
-| `<actuator>` | gốc | Danh sách động cơ |
-| `<body>` | worldbody | Một khâu cứng, lồng nhau thành cây động học |
-| `<joint>` | body | Khớp nối — body này cử động thế nào so với cha |
-| `<geom>` | body / worldbody | Hình khối: hiển thị và/hoặc va chạm |
-| `<inertial>` | body | Khối lượng, trọng tâm, ma trận quán tính |
-| `<site>` | body | Điểm mốc vô hình để tra cứu vị trí |
-| `<light>` | worldbody | Nguồn sáng |
-| `<mesh>` | asset | Nạp file STL |
-| `<material>` | asset | Màu sắc, độ bóng |
-| `<texture>` | asset | Hoạ tiết ô cờ, nền trời |
-| `<position>` | actuator | Servo điều khiển vị trí |
+| Thẻ            | Thuộc           | Vai trò                                                 |
+| --------------- | ---------------- | -------------------------------------------------------- |
+| `<mujoco>`    | gốc             | Bọc toàn bộ file                                      |
+| `<compiler>`  | gốc             | Quy ước đọc file: đơn vị góc, thư mục mesh     |
+| `<visual>`    | gốc             | Thiết lập hiển thị toàn cục                        |
+| `<default>`   | gốc             | Giá trị mặc định dùng chung, tránh lặp           |
+| `<worldbody>` | gốc             | Thế giới vật lý                                      |
+| `<asset>`     | gốc             | Kho mesh, texture, material                              |
+| `<actuator>`  | gốc             | Danh sách động cơ                                    |
+| `<body>`      | worldbody        | Một khâu cứng, lồng nhau thành cây động học     |
+| `<joint>`     | body             | Khớp nối — body này cử động thế nào so với cha |
+| `<geom>`      | body / worldbody | Hình khối: hiển thị và/hoặc va chạm               |
+| `<inertial>`  | body             | Khối lượng, trọng tâm, ma trận quán tính         |
+| `<site>`      | body             | Điểm mốc vô hình để tra cứu vị trí             |
+| `<light>`     | worldbody        | Nguồn sáng                                             |
+| `<mesh>`      | asset            | Nạp file STL                                            |
+| `<material>`  | asset            | Màu sắc, độ bóng                                    |
+| `<texture>`   | asset            | Hoạ tiết ô cờ, nền trời                            |
+| `<position>`  | actuator         | Servo điều khiển vị trí                             |
 
 ---
 
