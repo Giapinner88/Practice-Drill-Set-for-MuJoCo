@@ -174,4 +174,10 @@
     <position class="sts3215" name="wrist_roll" joint="wrist_roll" forcerange="-3.35 3.35" ctrlrange="-2.74385 2.84121"/>
     <position class="sts3215" name="gripper" joint="gripper" forcerange="-3.35 3.35" ctrlrange="-0.17453 1.74533"/>
   </actuator>
+
+  <!-- Tư thế lưu sẵn. Trong viewer, panel Simulation có nút "Load key"
+       để nạp lại tư thế này bất cứ lúc nào (hoặc nhấn phím L). -->
+  <keyframe>
+    <key name="home" qpos="0 -1.0 1.0 0.5 0 0.3" ctrl="0 -1.0 1.0 0.5 0 0.3"/>
+  </keyframe>
 </mujoco>

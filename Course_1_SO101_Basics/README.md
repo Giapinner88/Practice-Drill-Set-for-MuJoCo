@@ -5,7 +5,7 @@ Bài học tối giản nhất về MuJoCo, dùng cánh tay robot **SO-101** (5 
 ```
 Course_1_SO101_Basics/
 ├── model.xml      # Toàn bộ mô tả robot + scene, một file duy nhất
-├── simulate.py    # ★ BẮT ĐẦU TỪ ĐÂY - form chuẩn, bạn tự chỉnh góc
+├── simulate.py    # ★ BẮT ĐẦU TỪ ĐÂY - form chuẩn, điều khiển bằng thanh trượt
 ├── demo.py        # Bản mở rộng: cho 6 khớp dao động sin tự động
 ├── README.md
 └── assets/        # 13 file mesh STL của SO-101
@@ -14,41 +14,48 @@ Course_1_SO101_Basics/
 ## Chạy thử
 
 ```bash
-python simulate.py     # robot đứng ở một tư thế cố định - bạn tự đổi góc
+python simulate.py     # kéo thanh trượt trong viewer để điều khiển robot
 python demo.py         # robot tự chuyển động, in thông số ra màn hình
 ```
 
 Cần `pip install mujoco`. Nhấn **ESC** tại cửa sổ viewer để thoát.
 
-### Học bằng cách nghịch `simulate.py`
+### Điều khiển robot ngay trong viewer
 
-Mở [`simulate.py`](simulate.py), bạn sẽ thấy khối này ở ngay đầu file:
+Chạy `simulate.py` rồi **không cần sửa dòng code nào** — kéo thanh trượt là robot cử động ngay.
 
-```python
-TARGET = [
-    0.0,   # shoulder_pan    [-1.92, +1.92]   xoay đế trái/phải
-    -1.0,  # shoulder_lift   [-1.75, +1.75]   nâng/hạ vai
-    1.0,   # elbow_flex      [-1.69, +1.69]   gập khuỷu tay
-    0.5,   # wrist_flex      [-1.66, +1.66]   gập cổ tay lên/xuống
-    0.0,   # wrist_roll      [-2.74, +2.84]   xoay cổ tay
-    0.3,   # gripper         [-0.17, +1.75]   0.0 = kẹp đóng, 1.75 = mở hết
-]
-```
+**Mở panel điều khiển:** nhấn phím **`Tab`** để hiện panel bên **phải**, tìm mục **Control**. Ở đó có đúng 6 thanh trượt, mỗi thanh ứng với một actuator:
 
-Sửa **một** số, chạy lại, xem khớp nào cử động. Đây là cách nhanh nhất để cảm nhận từng bậc tự do trước khi đọc lý thuyết bên dưới.
+| Thanh trượt | Khoảng (rad) | Kéo thử để thấy |
+|---|---|---|
+| `shoulder_pan` | −1.92 … +1.92 | Toàn bộ cánh tay xoay trái/phải quanh đế |
+| `shoulder_lift` | −1.75 … +1.75 | Vai nâng lên/hạ xuống |
+| `elbow_flex` | −1.69 … +1.69 | Khuỷu gập vào/duỗi ra |
+| `wrist_flex` | −1.66 … +1.66 | Cổ tay gập lên/xuống |
+| `wrist_roll` | −2.74 … +2.84 | Cổ tay xoay tròn |
+| `gripper` | −0.17 … +1.75 | **Kẹp đóng/mở** — dễ thấy nhất, kéo thử đầu tiên |
 
-Vài tư thế đáng thử:
+Panel bên **trái** (cũng bật bằng `Tab`) có mục **Simulation** với nút **Load key** — bấm để đưa robot về tư thế `home` lưu sẵn trong `model.xml`, tiện khi bạn kéo lung tung rồi muốn về mốc ban đầu.
 
-| `TARGET` | Kết quả |
+**Ba điều đáng để ý khi kéo:**
+
+1. **Kéo `shoulder_pan` thì cả cánh tay xoay theo**, nhưng kéo `gripper` thì chỉ mỗi càng kẹp nhúc nhích. Đó chính là **cây động học** — chuyển động truyền từ cha xuống con, xem mục 3.2.
+2. **Thả tay ra, cánh tay hơi võng xuống** một chút so với vị trí bạn đặt. Không phải bug — đó là độ võng tĩnh của bộ điều khiển PD, xem mục 6.
+3. **Kéo hết cỡ thì thanh trượt dừng lại**, vì `ctrlrange` trong `<actuator>` chặn sẵn. Robot không bao giờ gãy khớp.
+
+> Đơn vị là **radian**, không phải độ. 90° = 1.57 rad, 45° = 0.79 rad.
+
+**Vài phím tắt viewer đáng nhớ:**
+
+| Phím | Tác dụng |
 |---|---|
-| `[0, 0, 0, 0, 0, 0]` | Tư thế gốc — cánh tay duỗi thẳng |
-| `[0, -1.5, 1.5, 0, 0, 0]` | Cuộn gọn lại |
-| `[1.5, -1.0, 1.0, 0.5, 0, 0.3]` | Xoay hẳn sang một bên |
-| `[0, -1.0, 1.0, 0.5, 0, 1.75]` | Giống mặc định nhưng **mở hết kẹp** |
-
-Đổi số cuối giữa `0.0` và `1.75` là thấy rõ kẹp đóng/mở nhất.
-
-> Đơn vị là **radian**, không phải độ. 90° = 1.57 rad, 45° = 0.79 rad. Vượt quá khoảng cho phép thì khớp chỉ dừng ở giới hạn, không hỏng gì cả.
+| `Tab` | Bật/tắt panel điều khiển |
+| `Space` | Tạm dừng / chạy tiếp mô phỏng |
+| `0`–`4` | Bật/tắt từng nhóm geom (nhấn `3` để hiện lớp collision) |
+| Chuột trái kéo | Xoay góc nhìn |
+| Chuột phải kéo | Di chuyển góc nhìn |
+| Cuộn chuột | Phóng to/thu nhỏ |
+| `Ctrl` + chuột trái kéo lên robot | Đẩy/kéo robot bằng lực — thử xem PD phản ứng thế nào |
 
 ---
 
@@ -425,7 +432,9 @@ $$
 
 với `kp = 998.22`, `kv = 2.731` kế thừa từ class `sts3215`, và `τ` bị chặn trong `forcerange`.
 
-Hệ quả thực tế: robot **không bám lệnh tuyệt đối**. Nếu `ctrl = 1.0` thì khớp dừng ở đâu đó gần 1.0 chứ không đúng bằng — vì cần một sai số khác 0 để sinh ra moment chống lại trọng lực. Đây là **độ võng tĩnh** của bộ PD, hoàn toàn đúng vật lý, không phải lỗi.
+Hệ quả thực tế: robot **không bám lệnh tuyệt đối**. Nếu `ctrl = 1.0` thì khớp dừng ở đâu đó gần 1.0 chứ không đúng bằng — vì cần một sai số khác 0 để sinh ra moment chống lại trọng lực. Đây là **độ võng tĩnh** của bộ PD, hoàn toàn đúng vật lý, không phải lỗi. Chính hiện tượng này bạn nhìn thấy khi kéo thanh trượt rồi thả tay: cánh tay dừng hơi thấp hơn vị trí đặt.
+
+**Thanh trượt trong viewer chính là `data.ctrl`.** Mỗi `<actuator>` sinh ra đúng một thanh trượt ở panel Control, và kéo nó là ghi thẳng vào `data.ctrl[i]`. Đó là lý do `simulate.py` **không** gán `data.ctrl` trong vòng lặp — gán đè thì thanh trượt mất tác dụng ngay.
 
 Ba loại actuator thường gặp:
 
@@ -452,6 +461,28 @@ Ba loại actuator thường gặp:
 Thẻ này thuần **thẩm mỹ**, không đụng gì tới vật lý. `<headlight>` là đèn gắn trên camera (luôn chiếu theo hướng bạn nhìn); `<global azimuth/elevation>` đặt góc camera ban đầu khi mở viewer.
 
 Đừng nhầm `<visual>` (thiết lập render toàn cục) với `class="visual"` (class geom ở mục 3.5) — hai thứ khác hẳn nhau, chỉ trùng tên.
+
+---
+
+## 7b. `<keyframe>` — tư thế lưu sẵn
+
+```xml
+<keyframe>
+  <key name="home" qpos="0 -1.0 1.0 0.5 0 0.3" ctrl="0 -1.0 1.0 0.5 0 0.3"/>
+</keyframe>
+```
+
+`<keyframe>` lưu sẵn một hoặc nhiều **tư thế đặt tên** để nạp lại nhanh. Mỗi `<key>` ghi `qpos` (vị trí khớp) và `ctrl` (lệnh điều khiển) — đúng 6 số vì `nq = nu = 6`.
+
+Trong Python, nạp keyframe số 0:
+
+```python
+mujoco.mj_resetDataKeyframe(model, data, 0)
+```
+
+Hàm này đặt **cả** `qpos` lẫn `ctrl` cùng lúc. Rất quan trọng: nếu chỉ đặt `qpos` mà quên `ctrl` (vẫn đang bằng 0), bộ PD sẽ lập tức kéo robot về tư thế 0 — trông như robot bị giật sập ngay khi khởi động.
+
+Trong viewer, panel trái mục **Simulation** có nút **Load key** để nạp lại tư thế này bất cứ lúc nào. Tiện khi bạn kéo thanh trượt lung tung rồi muốn về mốc ban đầu.
 
 ---
 
@@ -532,7 +563,7 @@ Model này **không khai báo `<option>`**, nên MuJoCo dùng mặc định: `ti
 
 **Bài 5 — Độ cứng bộ điều khiển.** Sửa `kp` của class `sts3215` từ `998.22` xuống `100`, rồi lên `5000`. `kp` nhỏ thì cánh tay võng và trễ; `kp` lớn thì bám sát hơn nhưng có thể dao động hoặc mất ổn định số.
 
-**Bài 6 — Giới hạn khớp.** Trong `simulate.py`, đặt `TARGET[0] = 5.0` (vượt xa `range` ±1.92). Khớp dừng ở đâu? Rồi mở `demo.py`, bỏ đoạn kẹp `min(max(target, lo), hi)` và tăng biên độ sin lên `2.0` — khớp có vượt quá `range` không? MuJoCo xử lý giới hạn khớp như ràng buộc **mềm**, không phải tường cứng tuyệt đối.
+**Bài 6 — Giới hạn khớp.** Trong `model.xml`, đổi `ctrlrange` của actuator `shoulder_pan` thành `"-5 5"` (vượt xa `range` ±1.92 của khớp). Chạy `simulate.py`, kéo thanh trượt hết cỡ — khớp dừng ở đâu? Rồi mở `demo.py`, bỏ đoạn kẹp `min(max(target, lo), hi)` và tăng biên độ sin lên `2.0`. MuJoCo xử lý giới hạn khớp như ràng buộc **mềm**, không phải tường cứng tuyệt đối.
 
 **Bài 7 — Trọng lực.** Thêm `<option gravity="0 0 0"/>` ngay sau `<compiler>`. Sai số bám ở Bài 2 thay đổi thế nào? Kết quả chứng minh điều gì về nguồn gốc sai số?
 
@@ -563,6 +594,7 @@ Model này **không khai báo `<option>`**, nên MuJoCo dùng mặc định: `ti
 | `<material>`  | asset            | Màu sắc, độ bóng                                    |
 | `<texture>`   | asset            | Hoạ tiết ô cờ, nền trời                            |
 | `<position>`  | actuator         | Servo điều khiển vị trí                             |
+| `<keyframe>`  | gốc             | Tư thế lưu sẵn, nạp lại bằng nút "Load key"          |
 
 ---
 
