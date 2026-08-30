@@ -1,85 +1,62 @@
-# Bản đồ Học tập MuJoCo (MuJoCo Learning Roadmap)
+# Lộ trình phát triển giáo trình
 
-Danh mục này liệt kê 50 bài thực hành từ cơ bản đến nâng cao. Lộ trình được thiết kế theo phương pháp **"Học qua dự án nhỏ" (Project-based learning)**, giúp người học dần làm chủ trình mô phỏng MuJoCo, từ việc định nghĩa một vật rắn đơn giản đến thao tác điều khiển robot phức hợp thông qua Python API. Sự tập trung đặc biệt được đặt vào **Underactuated Robotics** và thu hẹp khoảng cách **Sim-to-Real**.
+Roadmap này phản ánh nội dung thực sự có trong repo. Ký hiệu:
 
----
+- ✅: đã có bài và đang được chuẩn hóa;
+- 🟡: đã lên thiết kế nhưng chưa có bài hoàn chỉnh;
+- ⬜: dự kiến.
 
-## Chặng 1: Nền tảng Không gian và Vật rắn (Rigid Body Fundamentals)
-*Mục tiêu: Hiểu cách MuJoCo định nghĩa không gian 3D, cấu trúc phân cấp (cha - con), và tách bạch hoàn toàn giữa hiển thị thị giác (Visual) và tính toán vật lý (Inertial).*
+## Phần 1 — MuJoCo Foundations
 
-| Bài | Chủ đề | Tags Trọng tâm | Mục tiêu Kiến thức |
-| :--- | :--- | :--- | :--- |
-| **01** | Empty world | `<mujoco>` | Khởi tạo cấu trúc file XML chuẩn, hệ quy chiếu toàn cục. |
-| **02** | Static object (box) | `<geom>` | Định nghĩa hình học cơ sở, phân biệt body và geom. |
-| **03** | Ground and gravity | `<option>`, `<size>` | Thiết lập mặt phẳng tham chiếu, bộ giải (integrator). |
-| **04** | Body hierarchy | `<body>`, `freejoint` | Xây dựng cây động học (kinematic tree), bậc tự do gốc. |
-| **05** | Inertial properties | `<inertial>` | Ghi đè tự động nội suy; ma trận quán tính, khối lượng điểm. |
-| **06** | Mesh loading | `<mesh>` | Tách biệt Visual/Collision mesh, Auto-Convex Hull. |
-| **07** | Material and texture | `<material>` | Khái niệm PBR, UV mapping phục vụ Vision RL. |
-| **08** | Frame & orientation | `quat`, `euler` | Thao tác không gian bằng Quaternion, tránh Gimbal Lock. |
-| **09** | Camera setup | `<camera>` | Cấu hình camera Ego-centric và Allo-centric. |
-| **10** | Light sources | `<light>` | Xử lý đổ bóng, định hướng nguồn sáng. |
+| Trạng thái | Bài | Chủ đề | Trọng tâm MJCF/API |
+| --- | --- | --- | --- |
+| ✅ | 01 | Empty world và simulation loop | `<mujoco>`, `<option>`, `<worldbody>`, `MjModel`, `MjData`, `mj_step` |
+| ✅ | 02 | Static geoms | `<geom>`, primitive geometry, `size`, `pos`, `rgba` |
+| ✅ | 03 | Gravity và ground contact | `<option gravity>`, plane, dynamic body, `freejoint` |
+| ✅ | 04 | Body hierarchy | `<body>`, local frame, `freejoint`, `nq`, `nv` |
+| ✅ | 05 | Mesh loading | `<asset>`, `<mesh>`, visual/collision separation |
+| ✅ | 06 | Materials và textures | `<texture>`, `<material>`, built-in/file texture |
+| ✅ | 07 | Frames và orientation | `quat`, `euler`, `axisangle`, `zaxis` |
+| ✅ | 08 | Cameras | `<camera>`, camera modes, actuator/sensor introduction |
+| ✅ | 09 | Lights | `<light>`, diffuse/specular, directional/positional light |
+| ✅ | 10 | Inertial properties | `<inertial>`, mass, CoM, inertia tensor |
+| 🟡 | 11 | Joints và state indexing | hinge/slide/ball/free, `jnt_qposadr`, `jnt_dofadr` |
+| 🟡 | 12 | Actuators | motor/position/velocity, gain/bias, limits |
+| 🟡 | 13 | Contacts và solver | contact pairs, friction, `solref`, `solimp` |
+| 🟡 | 14 | Sensors | joint, IMU, force/torque, touch, `sensordata` |
+| 🟡 | 15 | Simulation pipeline | `mj_forward`, `mj_step1`, `mj_step2`, reset/keyframe |
+| ⬜ | 16 | Constraints và tendons | `<equality>`, fixed/spatial tendon |
+| ⬜ | 17 | Rendering và pixels | `Renderer`, RGB, depth, segmentation |
+| ⬜ | 18 | Model composition | `<default>`, `<include>`, assets và reusable MJCF |
 
----
+## Phần 2 — Modeling and Control
 
-## Chặng 2: Động lực học & Điều khiển Hệ Underactuated (Dynamics & Actuation)
-*Mục tiêu: Thiết lập không gian trạng thái (State-space), mô hình hóa toán học các cơ cấu chấp hành và khảo sát các hệ thống thiếu cơ cấu chấp hành (Underactuated systems).*
+| Trạng thái | Bài | Case study | Điều kiện kiểm chứng |
+| --- | --- | --- | --- |
+| ✅ | 01 | Simple Pendulum | năng lượng, phase portrait, torque saturation |
+| ✅ | 02 | Cart-pole | linearization, controllability, swing-up và LQR |
+| 🟡 | 03 | Acrobot/Pendubot | underactuation và energy shaping |
+| 🟡 | 04 | Planar Manipulator | forward kinematics, Jacobian, IK |
+| ⬜ | 05 | Manipulator control | gravity compensation, joint/task-space control |
+| ⬜ | 06 | Contact manipulation | gripper, friction, contact force, pick-and-place |
 
-| Bài | Chủ đề | Tags Trọng tâm | Mục tiêu Kiến thức |
-| :--- | :--- | :--- | :--- |
-| **11** | Simple Pendulum | `<joint type="hinge">` | Không gian pha (Phase space), Energy-shaping control. |
-| **12** | Cartpole | `type="slide"` | Khớp trượt vô hạn, Tương tác quán tính (Inertial coupling), LQR. |
-| **13** | Double Pendulum | `<body>` lồng nhau | Động lực học chuỗi mở (Open-chain), Hiệu ứng hỗn loạn (Chaos). |
-| **14** | Acrobot & Pendubot | `ctrlrange` | Hệ 2-DOF Underactuated, bài toán Swing-up phi tuyến. |
-| **15** | Slider-Crank | `<equality>` | Đóng vòng động học (Kinematic loops), Ràng buộc đẳng thức. |
-| **16** | Passive Dynamics | `springref` | Khảo sát lò xo xoắn, hệ số cản (damping), dao động tắt dần. |
-| **17** | Joint Limits | `limited="true"` | Ràng buộc bất đẳng thức, biên độ vật lý của khớp. |
-| **18** | Position Actuator | `type="position"` | Phân tích bộ điều khiển PD ẩn nội bộ của MuJoCo. |
-| **19** | Velocity Actuator | `type="velocity"` | Bộ bám vận tốc, triệt tiêu sai số tích phân. |
-| **20** | Torque Actuator | `type="motor"` | Ánh xạ lực thuần túy (Direct torque control). |
-| **21** | Muscle Actuator | `type="muscle"` | Khảo sát đặc tính sinh lý học và độ cứng phi tuyến của cơ bắp. |
-| **22** | Tendon Dynamics (Fixed) | `<tendon>` | Truyền động gián tiếp qua dây cáp cố định chiều dài. |
-| **23** | Tendon Dynamics (Spatial)| `<spatial>` | Ròng rọc không gian (Spatial pulleys), định tuyến cáp 3D. |
-| **24** | Multi-actuator Mapping | `gainprm`, `bias` | Ánh xạ tín hiệu điều khiển ảo thành lực cơ học thực tế. |
+## Phần 3 — Reinforcement Learning với `mjlab`
 
----
+Trước khi viết code, repo và phiên bản `mjlab` sẽ được pin rõ để tránh nhầm với MJX hoặc MuJoCo Playground.
 
-## Chặng 3: Cơ học Tiếp xúc & Cảm biến (Contact Mechanics & Perception)
-*Mục tiêu: Xử lý tương tác vật lý khắt khe (va chạm, ma sát) và xây dựng pipeline trích xuất dữ liệu cảm biến (Observation space).*
+| Trạng thái | Bài | Chủ đề | Bằng chứng đầu ra |
+| --- | --- | --- | --- |
+| 🟡 | 01 | Anatomy of an RL task | observation/action/reward/termination contract |
+| 🟡 | 02 | Vectorized training | throughput và reproducible seed |
+| ⬜ | 03 | PPO baseline | learning curve và checkpoint |
+| ⬜ | 04 | Reward engineering | reward ablation |
+| ⬜ | 05 | Domain randomization | held-out evaluation |
+| ⬜ | 06 | Policy deployment | controller baseline và policy comparison |
 
-| Bài | Chủ đề | Tags Trọng tâm | Mục tiêu Kiến thức |
-| :--- | :--- | :--- | :--- |
-| **25** | Bouncing Ball | `solref`, `solimp` | Bản chất của Contact Solver: Độ cứng và Damping tiếp xúc. |
-| **26** | Contact Friction | `condim`, `friction` | Khảo sát ma sát trượt (sliding), xoay (torsional) và lăn (rolling). |
-| **27** | Joint Friction & Loss | `armature`, `frictionloss`| Quán tính rotor, ma sát tĩnh/động tại khớp (Sim-to-Real gap). |
-| **28** | Gyroscopic Effects | `inertia`, `spin` | Phân tích con quay hồi chuyển, vật thể có trọng tâm lệch. |
-| **29** | Collision Filtering | `contype`, `conaffinity`| Tối ưu hóa tính toán bằng bitmask, loại trừ va chạm nội bộ. |
-| **30** | Soft Constraints | `solref` trong `<equality>`| Làm mềm các ràng buộc cứng để tránh suy biến ma trận. |
-| **31** | Kinematic Sensors | `<jointpos>`, `<jointvel>`| Bypass API cấp thấp, trích xuất vector trạng thái chuẩn hóa. |
-| **32** | IMU Sensor | `<accelerometer>`, `<gyro>`| Mô phỏng nhiễu Gaussian và trôi dạt (drift) của IMU. |
-| **33** | Force/Torque Sensor | `<force>`, `<torque>` | Đo lường nội lực và momen tại điểm liên kết (site). |
-| **34** | Tactile Sensing | `<touch>` | Mô phỏng mảng cảm biến xúc giác trên bề mặt vật thể. |
-| **35** | Forceplate (GRF) | `<force>` toàn cục | Trích xuất Phản lực mặt đất (Ground Reaction Force). |
-| **36** | Vision: RGB Rendering | `mujoco.Renderer` | Trích xuất mảng pixel ảnh màu phục vụ CNN/Vision-RL. |
-| **37** | Vision: Depth & Seg | `enable_depth` | Trích xuất bản đồ chiều sâu (Depth map) và Segmentation. |
+## Thứ tự phát triển
 
----
-
-## Chặng 4: Tích hợp Hệ thống & Triển khai (System Integration & Sim-to-Real)
-*Mục tiêu: Đưa mô hình vào thực tiễn, đóng gói môi trường Gym/RL, xử lý nhiễu hệ thống và triển khai luật điều khiển trên các cấu trúc Robot phức hợp.*
-
-| Bài | Chủ đề | Tags Trọng tâm | Mục tiêu Kiến thức |
-| :--- | :--- | :--- | :--- |
-| **38** | Actuator Noise & Delay | `noise`, `timeconst` | Giả lập độ trễ giao tiếp và nhiễu phần cứng (Sim-to-Real). |
-| **39** | External Disturbances | `appliedforce` | Tiêm nhiễu ngoại lực (gió, va đập) bằng Python API. |
-| **40** | User-defined Dynamics | `actdyn`, `plugin` | Tự định nghĩa phương trình vi phân cho Actuator tùy chỉnh. |
-| **41** | Mobile Base: Diff-Drive | `slide`, `hinge` | Tích hợp: Xe tự hành 2 bánh dẫn động vi sai. |
-| **42** | Mobile Base: Omni | Bánh Mecanum | Tích hợp: Động học robot di chuyển đa hướng. |
-| **43** | Planar Manipulator | 2-DOF Arm | Tích hợp: Động học ngược (IK) và Jacobian cho tay máy phẳng. |
-| **44** | Spatial Manipulator | 6-DOF Arm | Tích hợp: Điều khiển không gian tác động (Task-space control). |
-| **45** | Gripper Mechanics | `<equality>` | Thiết kế cơ cấu kẹp song song (Parallel jaw gripper). |
-| **46** | Object Manipulation | `site`, `touch` | Bài toán gắp thả (Pick and Place) và ma sát kẹp giữ. |
-| **47** | Legged: 1D Hopper | Hệ Underactuated | Tích hợp: Robot nhảy lò cò 1 chân, điều khiển chu kỳ chạm đất. |
-| **48** | Legged: Bipedal Walker| `<tendon>`, `<actuator>`| Tích hợp: Động lực học đi bộ hai chân cơ sở. |
-| **49** | Custom C++ Plugins | `<plugin>` | Mở rộng MuJoCo: Tích hợp thuật toán thủy động lực học/khí động học. |
-| **50** | Policy Deployment | Toàn bộ API | Đồ án: Đóng gói môi trường Gym, chạy mạng Neural Network / RL Agent. |
+1. Làm cho mọi bài hiện có chạy độc lập và kiểm tra được.
+2. Hoàn thiện coverage còn thiếu của Phần 1.
+3. Hoàn thiện bốn model/control case study cốt lõi.
+4. Chốt dependency và API contract cho `mjlab`.
+5. Chỉ công bố kết quả RL khi có cấu hình, seed và artifact tái lập được.

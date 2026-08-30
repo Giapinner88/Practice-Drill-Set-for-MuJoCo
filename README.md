@@ -1,50 +1,85 @@
-# Lộ trình Thực hành MuJoCo: Từ Cơ sở Động lực học đến Tích hợp Hệ thống
-*(MuJoCo Practical Drill Set: From Dynamics Fundamentals to System Integration)*
+# MuJoCo Practice Drill Set
 
-## 1. Giới thiệu (Introduction)
-Kho lưu trữ này được thiết kế như một giáo trình thực hành mã nguồn mở (open-source tutorial series) dành cho những người mới bắt đầu làm quen với trình mô phỏng vật lý MuJoCo. Thay vì chỉ cung cấp các tài liệu lý thuyết, dự án này tập trung vào phương pháp "học qua từng bài toán" (problem-based learning), giúp người học dần làm chủ từ cú pháp XML cơ bản đến việc điều khiển các hệ thống robot phức hợp thông qua Python API.
+Giáo trình thực hành MuJoCo theo hướng **học bằng mô hình, đo lường và kiểm chứng**. Repo đưa người học đi từ MJCF và Python API, qua các bài toán modeling/control cổ điển, đến reinforcement learning với `mjlab`.
 
-Mục tiêu cốt lõi: Cung cấp một bộ tài liệu có **tính kế thừa cao**, dễ tiếp cận, làm cầu nối giữa lý thuyết cơ học/điều khiển và môi trường mô phỏng thực tế.
+## Mục tiêu học tập
 
-## 2. Lộ trình Học tập (Learning Syllabus)
-Các bài thực hành được chia thành 4 chặng (modules), được thiết kế với độ khó tăng dần. Người học bắt buộc phải nắm vững các khái niệm ở chặng trước để xây dựng hệ thống ở chặng sau.
+Sau khi hoàn thành lộ trình, người học có thể:
 
-### Chặng 1: Nền tảng Không gian và Vật rắn (Fundamentals of Rigid Bodies)
-*Mục tiêu: Hiểu cách MuJoCo định nghĩa không gian, cấu trúc phân cấp (hierarchy) và các đặc tính tĩnh học của vật rắn.*
-- **Bài 1-3:** Khởi tạo môi trường (World, Gravity, Ground).
-- **Bài 4-7:** Cấu trúc động học phân cấp (Body trees, Frames, Quaternions).
-- **Bài 8-10:** Xử lý đồ họa và thuộc tính cơ học (Meshes, Materials, Inertial properties, Camera, Lighting).
+- đọc, viết và kiểm tra một mô hình MJCF có cấu trúc;
+- phân biệt dữ liệu tĩnh trong `mujoco.MjModel` với trạng thái runtime trong `mujoco.MjData`;
+- sử dụng simulation pipeline như `mj_forward`, `mj_step`, `mj_resetData` và các mảng `qpos`, `qvel`, `qacc`, `ctrl`;
+- xây dựng và kiểm chứng các model động lực học cơ bản;
+- cài đặt controller cổ điển và đánh giá bằng đại lượng định lượng;
+- chuyển một model đã kiểm chứng thành môi trường RL có quy trình đánh giá tái lập được.
 
-### Chặng 2: Động học, Động lực học và Cơ cấu Chấp hành (Kinematics & Actuation)
-*Mục tiêu: Đưa hệ thống vào trạng thái chuyển động, xác định các bậc tự do (DOF) và thiết lập luật điều khiển cơ sở.*
-- **Bài 11-13:** Khớp nối cơ bản (Hinge, Slide) - Bài toán Con lắc và Cơ cấu tay quay con trượt.
-- **Bài 14-16:** Ràng buộc phần cứng (Joint limits, Springs, Damping).
-- **Bài 20-22, 26-29:** Phân tích các bộ truyền động (Position/Velocity/Torque/Muscle Actuators) và ánh xạ lực (Gain, Bias).
-- **Bài 32, 41-42:** Truyền động gián tiếp (Tendons) và Động học cánh tay máy (Multi-DOF Manipulators).
+Mục tiêu “phủ MuJoCo” được hiểu là làm chủ các nhóm tag/API cốt lõi. Các tính năng chuyên biệt được theo dõi trong [bảng coverage](docs/coverage.md), không nhồi tất cả vào một bài.
 
-### Chặng 3: Cơ học Tiếp xúc và Cảm biến (Contact Mechanics & Perception)
-*Mục tiêu: Mô hình hóa sự tương tác giữa robot và môi trường – ranh giới quyết định tính chân thực của mô phỏng (Sim-to-Real).*
-- **Bài 17-18, 33, 35:** Mô hình va chạm mềm (Soft constraints, `solref`, `solimp`) và Ma sát khớp.
-- **Bài 24:** Lọc va chạm (Collision filtering - `contype`, `conaffinity`).
-- **Bài 25, 30-31, 37:** Cảm biến nội tại và ngoại cảm (Force/Torque sensors, Touch, Tactile).
-- **Bài 34, 38:** Giả lập môi trường thực (Nhiễu tín hiệu - Noise, Lực ngoại lai - External forces).
+## Cấu trúc giáo trình
 
-### Chặng 4: Tích hợp Hệ thống (System Integration via Python API)
-*Mục tiêu: Thoát khỏi môi trường XML thuần túy, sử dụng Python để nhúng các thuật toán điều khiển và AI.*
-- **Bài 39-40:** Giao tiếp MuJoCo - Python (`mujoco.mj_step`, trích xuất ma trận trạng thái).
-- **Bài 43-45:** Cấu trúc Robot di động (Differential drive, Omnidirectional/Mecanum base).
-- **Bài 46:** Cơ sở Robot tự hành có chân (Simple Walking Biped).
-- **Bài 47, 50:** Tích hợp toàn diện: Hệ thống Robot + Môi trường + Luật điều khiển (Python Policy).
+### Phần 1 — Foundations
 
-## 3. Cấu trúc một Bài học Tiêu chuẩn
-Mỗi thư mục bài học trong kho lưu trữ này được chuẩn hóa với các thành phần sau để đảm bảo tính minh bạch:
-1. `model.xml`: File định nghĩa cấu trúc cơ học.
-2. `simulate.py`: Script Python để khởi chạy, thu thập dữ liệu hoặc áp dụng lực điều khiển.
-3. `README.md` (cục bộ): Giải thích lý thuyết vật lý cốt lõi của bài toán, các thẻ XML trọng tâm được sử dụng, và phân tích kết quả kỳ vọng.
+[part_1_foundations](part_1_foundations) giới thiệu MJCF, cấu trúc vật rắn, assets, rendering và simulation loop. Python API được sử dụng ngay từ bài đầu thay vì để đến cuối lộ trình.
 
-## 4. Cài đặt và Sử dụng (Installation & Usage)
+### Phần 2 — Models and Control
+
+[part_2_models_control](part_2_models_control) dùng Pendulum, Cart-pole, Acrobot và Manipulator làm case study để nối phương trình giải tích, model MuJoCo và controller.
+
+### Phần 3 — Reinforcement Learning
+
+[part_3_reinforcement_learning](part_3_reinforcement_learning) sẽ trình bày cách xây dựng task RL với `mjlab`, từ observation/action/reward đến training, evaluation và domain randomization.
+
+Xem [roadmap.md](roadmap.md) để biết nội dung đã có và phần đang dự kiến.
+
+## Cài đặt
+
+Yêu cầu Python 3.10 trở lên. Tạo môi trường ảo riêng trước khi cài:
+
 ```bash
-# Yêu cầu: Python >= 3.8
-git clone [https://github.com/Giapinner88/Practice-Drill-Set-for-MuJoCo.git](https://github.com/Giapinner88/Practice-Drill-Set-for-MuJoCo.git)
-cd Practice-Drill-Set-for-MuJoCo
-pip install mujoco numpy
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e '.[test]'
+```
+
+Kiểm tra cài đặt:
+
+```bash
+python -c "import mujoco; print(mujoco.__version__)"
+python tools/validate_repo.py
+```
+
+## Chạy một bài
+
+Mỗi bài có `README.md`, `model.xml` và script chạy cục bộ. Script dùng đường dẫn dựa trên `__file__`, vì vậy có thể gọi từ thư mục bất kỳ:
+
+```bash
+python part_1_foundations/01_empty_world/simulate.py
+python part_1_foundations/01_empty_world/simulate.py --headless --duration 1
+```
+
+Với bài Cart-pole:
+
+```bash
+python part_2_models_control/02_cartpole/analytical_linearization.py
+python part_2_models_control/02_cartpole/mujoco_linearization.py
+python part_2_models_control/02_cartpole/simulate_swingup_lqr.py
+```
+
+## Nguyên tắc học thuật
+
+- Mọi đại lượng phải ghi đơn vị và quy ước hệ tọa độ.
+- Phân biệt giả thiết mô hình, kết quả giải tích và kết quả đo từ simulation.
+- Một lệnh chạy thành công không tự chứng minh mô hình đúng.
+- Mỗi claim định lượng cần phép đo, baseline hoặc điều kiện kiểm chứng.
+- Controller phải công bố giới hạn actuator, timestep và trạng thái cân bằng.
+- Kết quả RL phải ghi seed, số episode, checkpoint và tiêu chí đánh giá.
+
+Chuẩn chi tiết cho một bài nằm trong [docs/lesson_standard.md](docs/lesson_standard.md).
+
+## Tài liệu chính
+
+- [MuJoCo documentation](https://mujoco.readthedocs.io/)
+- [MJCF XML reference](https://mujoco.readthedocs.io/en/stable/XMLreference.html)
+- [MuJoCo Python bindings](https://mujoco.readthedocs.io/en/stable/python.html)
+- Todorov, Erez, Tassa, “MuJoCo: A physics engine for model-based control,” IROS 2012.
