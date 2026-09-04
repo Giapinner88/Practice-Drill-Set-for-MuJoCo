@@ -14,9 +14,9 @@
         <body name="robot_link_1" pos="0 0 1">
             <freejoint/>
             <!-- Geom hiển thị (visual) -->
-            <geom type="mesh" mesh="mesh_vis" contype="0" conaffinity="0" group="1" rgba="0.5 0.5 0.5 1"/>
+            <geom name="visual_mesh" type="mesh" mesh="mesh_vis" contype="0" conaffinity="0" group="1" rgba="0.5 0.5 0.5 1"/>
             <!-- Geom va chạm (collision) -->
-            <geom type="mesh" mesh="mesh_col" rgba="0 1 0 0.2" group="3"/>
+            <geom name="collision_mesh" type="mesh" mesh="mesh_col" rgba="0 1 0 0.2" group="3"/>
         </body>
     </worldbody>
 </mujoco>

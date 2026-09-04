@@ -1,18 +1,18 @@
 # Phần 1 — MuJoCo Foundations
 
-Phần này xây nền tảng MJCF và Python API theo thứ tự tăng dần. Mỗi bài chỉ thêm một nhóm khái niệm chính và phải chạy độc lập.
+Học các bài theo thứ tự từ 01 đến 10. Mỗi bài sử dụng lại kiến thức của bài trước và thêm một nhóm tag hoặc API mới.
 
-| Bài | Chủ đề | Trạng thái |
-| --- | --- | --- |
-| [01](01_empty_world) | Empty world và simulation loop | có bài |
-| [02](02_static_geoms) | Static primitive geoms | có bài |
-| [03](03_gravity_and_ground) | Gravity, free body và ground contact | có bài |
-| [04](04_body_hierarchy) | Body hierarchy và generalized coordinates | có bài |
-| [05](05_mesh_loading) | Visual/collision meshes | có bài |
-| [06](06_materials_and_textures) | Materials và textures | có bài |
-| [07](07_frames_and_orientation) | Frames và orientation | có bài |
-| [08](08_cameras) | Cameras | có bài |
-| [09](09_lights) | Light sources | có bài |
-| [10](10_inertial_properties) | Inertial properties | có bài |
+| Bài | Nội dung |
+| --- | --- |
+| [01 — Empty world](01_empty_world) | `MjModel`, `MjData` và simulation loop |
+| [02 — Static geoms](02_static_geoms) | Các geometry cơ bản và quy ước `size` |
+| [03 — Gravity and ground](03_gravity_and_ground) | Vật thể tự do, trọng lực và contact với ground |
+| [04 — Body hierarchy](04_body_hierarchy) | Cây body, local pose và world pose |
+| [05 — Mesh loading](05_mesh_loading) | Visual mesh và collision mesh |
+| [06 — Materials and textures](06_materials_and_textures) | Texture tạo sẵn và texture từ file |
+| [07 — Frames and orientation](07_frames_and_orientation) | Euler, quaternion, axis-angle và `zaxis` |
+| [08 — Lights](08_lights) | Directional, point và spot light |
+| [09 — Cameras](09_cameras) | Camera cố định/gắn body/tracking, RGB, depth và video |
+| [10 — Inertial properties](10_inertial_properties) | Mass, center of mass và inertia tensor |
 
-Các bài về joints, actuators, contacts, sensors và simulation pipeline sẽ được bổ sung trước khi Phần 1 được xem là hoàn chỉnh.
+Chạy `simulate.py` không kèm `--duration` để giữ viewer mở. Dùng `--headless` khi bạn chỉ cần kết quả số; nếu không đặt duration, headless chạy 5 giây simulation time.

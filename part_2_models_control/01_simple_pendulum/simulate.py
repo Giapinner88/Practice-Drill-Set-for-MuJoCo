@@ -26,7 +26,7 @@ DAMPING_NM_S_RAD = 0.01
 
 
 def simulate(
-    duration: float,
+    duration: float | None,
     headless: bool,
     gain: float,
     torque_limit: float,
@@ -76,11 +76,12 @@ def simulate(
         mujoco.mj_step(model, data)
 
     if headless:
+        assert duration is not None
         while data.time < duration:
             control_and_step()
     else:
         with mujoco.viewer.launch_passive(model, data) as viewer:
-            while viewer.is_running() and data.time < duration:
+            while viewer.is_running() and (duration is None or data.time < duration):
                 step_start = time.perf_counter()
                 control_and_step()
                 viewer.sync()
@@ -130,17 +131,18 @@ def save_plot(result: dict[str, np.ndarray | float], gain: float) -> Path:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--duration", type=float, default=30.0)
+    parser.add_argument("--duration", type=float, help="simulation seconds; viewer is unlimited by default")
     parser.add_argument("--headless", action="store_true")
     parser.add_argument("--gain", type=float, default=0.5)
     parser.add_argument("--torque-limit", type=float, default=3.0)
     parser.add_argument("--initial-angle", type=float, default=0.1)
     args = parser.parse_args()
-    if args.duration <= 0 or args.gain < 0 or args.torque_limit <= 0:
+    if (args.duration is not None and args.duration <= 0) or args.gain < 0 or args.torque_limit <= 0:
         parser.error("duration and torque limit must be positive; gain must be non-negative")
 
+    duration = args.duration if args.duration is not None else (5.0 if args.headless else None)
     result = simulate(
-        args.duration,
+        duration,
         args.headless,
         args.gain,
         args.torque_limit,
@@ -148,8 +150,9 @@ def main() -> None:
     )
     plot_path = save_plot(result, args.gain)
     final_error = float(np.asarray(result["energy"])[-1] - result["desired_energy"])
+    simulated_time = float(np.asarray(result["time"])[-1])
     print(
-        f"duration={args.duration:.3f} s gain={args.gain:g} "
+        f"simulated_time={simulated_time:.3f} s gain={args.gain:g} "
         f"torque_limit={args.torque_limit:g} N*m "
         f"final_energy_error={final_error:.6f} J "
         f"saturation_fraction={result['saturation_fraction']:.6f}"

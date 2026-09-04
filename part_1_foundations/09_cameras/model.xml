@@ -4,7 +4,7 @@
     
     <worldbody>
         <light pos="0 0 5" dir="0 0 -1" directional="true"/>
-        <geom type="plane" size="5 5 0.1" rgba="0.8 0.9 0.8 1"/>
+        <geom name="ground" type="plane" size="5 5 0.1" rgba="0.8 0.9 0.8 1"/>
         
         <!-- Fixed camera nhìn xuống và hơi nghiêng -->
         <camera name="fixed_cam" pos="0 -3 2" euler="55 0 0" fovy="60"/>
@@ -13,8 +13,9 @@
         <camera name="tracking_cam" pos="0 -4 3" mode="targetbody" target="moving_box"/>
         
         <body name="moving_box" pos="0 0 0.5">
-            <joint name="slider" type="slide" axis="1 0 0" range="-2 2"/>
-            <geom type="box" size="0.2 0.2 0.2" rgba="0.2 0.8 0.2 1"/>
+            <inertial pos="0 0 0" mass="1" diaginertia="0.01 0.01 0.01"/>
+            <joint name="slider" type="slide" axis="1 0 0" range="-2 2" limited="true" damping="2"/>
+            <geom name="moving_box_geom" type="box" size="0.2 0.2 0.2" rgba="0.2 0.8 0.2 1"/>
             
             <!-- Robot camera nhìn theo hướng +X của box -->
             <camera name="robot_cam_forward" pos="0.3 0 0" xyaxes="0 -1 0 0 0 1" fovy="90"/>
@@ -40,12 +41,10 @@
         </body>
     </worldbody>
     
-    <!-- THÊM ACTUATOR để điều khiển -->
     <actuator>
-        <motor name="slide_motor" joint="slider" gear="100" ctrlrange="-1 1"/>
+        <position name="slide_position" joint="slider" kp="80" ctrlrange="-1.5 1.5" ctrllimited="true"/>
     </actuator>
-    
-    <!-- THÊM SENSOR để đọc vị trí -->
+
     <sensor>
         <jointpos name="slider_pos" joint="slider"/>
         <jointvel name="slider_vel" joint="slider"/>

@@ -1,8 +1,8 @@
 # P1-05 — Mesh loading và collision geometry
 
-## Chuẩn đầu ra
+## Sau bài này, bạn có thể
 
-Người học nạp mesh từ `<asset>`, tách visual mesh khỏi collision mesh và giải thích tác động của scale/collision filtering.
+Nạp mesh từ `<asset>`, tách visual mesh khỏi collision mesh và kiểm tra scale cũng như collision filtering.
 
 ## Thiết kế model
 
@@ -13,7 +13,7 @@ Người học nạp mesh từ `<asset>`, tách visual mesh khỏi collision mes
 </asset>
 ```
 
-Visual geom dùng `contype="0" conaffinity="0"`, nên không tham gia contact. Collision geom đơn giản hơn được dùng cho broad/narrow-phase collision. Tách hai representation giúp kiểm soát chi phí và tránh phụ thuộc vào mesh đồ họa quá chi tiết.
+Visual geom dùng `contype="0" conaffinity="0"`, nên không tham gia contact. Collision geom được dùng riêng cho broad-phase và narrow-phase collision. Trong viewer, bạn có thể bật từng geom group để nhìn hai mesh chồng lên nhau.
 
 STL không lưu đơn vị vật lý. `scale="0.01 0.01 0.01"` là một giả thiết chuyển đổi đơn vị của asset này, không phải quy tắc chung cho mọi STL.
 

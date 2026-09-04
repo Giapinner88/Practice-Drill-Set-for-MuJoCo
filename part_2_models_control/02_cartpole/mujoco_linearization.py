@@ -49,7 +49,7 @@ def main() -> None:
         )
 
     q_cost = np.diag([2.0, 30.0, 1.0, 4.0])
-    r_cost = np.diag([0.5])
+    r_cost = np.diag([1.0])
     riccati = la.solve_discrete_are(a_discrete, b_discrete, q_cost, r_cost)
     gain = np.linalg.solve(
         b_discrete.T @ riccati @ b_discrete + r_cost,

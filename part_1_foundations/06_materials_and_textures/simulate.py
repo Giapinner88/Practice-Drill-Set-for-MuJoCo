@@ -13,18 +13,19 @@ LESSON_DIR = Path(__file__).resolve().parent
 MODEL_CHOICES = ("model.xml", "file_textures.xml")
 
 
-def run(model_name: str, duration: float, headless: bool) -> None:
+def run(model_name: str, duration: float | None, headless: bool) -> None:
     model_path = LESSON_DIR / model_name
     model = mujoco.MjModel.from_xml_path(str(model_path))
     data = mujoco.MjData(model)
     print(f"model_file={model_name} ntex={model.ntex} nmat={model.nmat}")
 
     if headless:
+        assert duration is not None
         while data.time < duration:
             mujoco.mj_step(model, data)
     else:
         with mujoco.viewer.launch_passive(model, data) as viewer:
-            while viewer.is_running() and data.time < duration:
+            while viewer.is_running() and (duration is None or data.time < duration):
                 step_start = time.perf_counter()
                 mujoco.mj_step(model, data)
                 viewer.sync()
@@ -37,12 +38,13 @@ def run(model_name: str, duration: float, headless: bool) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--model", choices=MODEL_CHOICES, default="model.xml")
-    parser.add_argument("--duration", type=float, default=5.0)
+    parser.add_argument("--duration", type=float, help="simulation seconds; viewer is unlimited by default")
     parser.add_argument("--headless", action="store_true")
     args = parser.parse_args()
-    if args.duration <= 0:
+    if args.duration is not None and args.duration <= 0:
         parser.error("--duration must be positive")
-    run(args.model, args.duration, args.headless)
+    duration = args.duration if args.duration is not None else (5.0 if args.headless else None)
+    run(args.model, duration, args.headless)
 
 
 if __name__ == "__main__":

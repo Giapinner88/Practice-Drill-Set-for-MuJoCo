@@ -1,8 +1,8 @@
 # P1-01 — Empty world và simulation loop
 
-## Chuẩn đầu ra
+## Sau bài này, bạn có thể
 
-Sau bài này, người học có thể biên dịch MJCF thành `mujoco.MjModel`, tạo `mujoco.MjData`, gọi `mujoco.mj_step` và giải thích vì sao model và data là hai đối tượng khác nhau.
+Biên dịch MJCF thành `mujoco.MjModel`, tạo `mujoco.MjData`, gọi `mujoco.mj_step` và giải thích vì sao model và data là hai đối tượng khác nhau.
 
 ## Kiến thức tiên quyết
 

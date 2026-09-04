@@ -1,8 +1,8 @@
 # P1-06 — Materials và textures
 
-## Chuẩn đầu ra
+## Sau bài này, bạn có thể
 
-Người học phân biệt texture (dữ liệu ảnh/thủ tục), material (tham số hiển thị có thể tái sử dụng) và geom (đối tượng tham chiếu material).
+Phân biệt texture, material và geom; sử dụng cả texture tạo sẵn lẫn texture đọc từ file.
 
 ## Hai model đối chứng
 

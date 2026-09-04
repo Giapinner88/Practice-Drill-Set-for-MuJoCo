@@ -1,8 +1,8 @@
 # P1-02 — Static geoms
 
-## Chuẩn đầu ra
+## Sau bài này, bạn có thể
 
-Người học phân biệt `body` và `geom`, sử dụng các primitive geometry và hiểu quy ước `size` của từng loại.
+Phân biệt `body` và `geom`, sử dụng các primitive geometry và đọc đúng thuộc tính `size` của từng loại.
 
 ## Ý tưởng chính
 

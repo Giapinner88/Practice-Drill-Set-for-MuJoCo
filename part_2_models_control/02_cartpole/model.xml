@@ -32,7 +32,7 @@
     </worldbody>
 
     <actuator>
-        <motor name="force_x" joint="slider" gear="1" ctrllimited="true" ctrlrange="-10.0 10.0"/>
+        <motor name="force_x" joint="slider" gear="1" ctrllimited="true" ctrlrange="-20.0 20.0"/>
     </actuator>
 
     <sensor>

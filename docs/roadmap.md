@@ -13,12 +13,12 @@ Roadmap này phản ánh nội dung thực sự có trong repo. Ký hiệu:
 | ✅ | 01 | Empty world và simulation loop | `<mujoco>`, `<option>`, `<worldbody>`, `MjModel`, `MjData`, `mj_step` |
 | ✅ | 02 | Static geoms | `<geom>`, primitive geometry, `size`, `pos`, `rgba` |
 | ✅ | 03 | Gravity và ground contact | `<option gravity>`, plane, dynamic body, `freejoint` |
-| ✅ | 04 | Body hierarchy | `<body>`, local frame, `freejoint`, `nq`, `nv` |
+| ✅ | 04 | Body hierarchy | nested `<body>`, welded frame, hinge, local/world pose |
 | ✅ | 05 | Mesh loading | `<asset>`, `<mesh>`, visual/collision separation |
 | ✅ | 06 | Materials và textures | `<texture>`, `<material>`, built-in/file texture |
 | ✅ | 07 | Frames và orientation | `quat`, `euler`, `axisangle`, `zaxis` |
-| ✅ | 08 | Cameras | `<camera>`, camera modes, actuator/sensor introduction |
-| ✅ | 09 | Lights | `<light>`, diffuse/specular, directional/positional light |
+| ✅ | 08 | Lights | `<light>`, diffuse/specular, directional/positional light |
+| ✅ | 09 | Cameras | `<camera>`, camera modes, `Renderer`, RGB, depth và video |
 | ✅ | 10 | Inertial properties | `<inertial>`, mass, CoM, inertia tensor |
 | 🟡 | 11 | Joints và state indexing | hinge/slide/ball/free, `jnt_qposadr`, `jnt_dofadr` |
 | 🟡 | 12 | Actuators | motor/position/velocity, gain/bias, limits |
@@ -26,7 +26,7 @@ Roadmap này phản ánh nội dung thực sự có trong repo. Ký hiệu:
 | 🟡 | 14 | Sensors | joint, IMU, force/torque, touch, `sensordata` |
 | 🟡 | 15 | Simulation pipeline | `mj_forward`, `mj_step1`, `mj_step2`, reset/keyframe |
 | ⬜ | 16 | Constraints và tendons | `<equality>`, fixed/spatial tendon |
-| ⬜ | 17 | Rendering và pixels | `Renderer`, RGB, depth, segmentation |
+| ⬜ | 17 | Rendering nâng cao | segmentation, render flags và pixel-based observation |
 | ⬜ | 18 | Model composition | `<default>`, `<include>`, assets và reusable MJCF |
 
 ## Phần 2 — Modeling and Control
@@ -35,10 +35,10 @@ Roadmap này phản ánh nội dung thực sự có trong repo. Ký hiệu:
 | --- | --- | --- | --- |
 | ✅ | 01 | Simple Pendulum | năng lượng, phase portrait, torque saturation |
 | ✅ | 02 | Cart-pole | linearization, controllability, swing-up và LQR |
-| 🟡 | 03 | Acrobot/Pendubot | underactuation và energy shaping |
-| 🟡 | 04 | Planar Manipulator | forward kinematics, Jacobian, IK |
-| ⬜ | 05 | Manipulator control | gravity compensation, joint/task-space control |
-| ⬜ | 06 | Contact manipulation | gripper, friction, contact force, pick-and-place |
+| ✅ | 03 | Acrobot | underactuation, PFL, energy shaping và LQR |
+| 🟡 | 04 | SO-101 Manipulator | reach-and-press hoàn thiện; pick-and-place và push-to-target đang phát triển |
+| ✅ | 05 | Differential-drive Mobile Robot | wheel contact, odometry discrepancy và waypoint control |
+| ✅ | 06 | Quadrotor | freejoint, site thrust, wrench mixing và hover recovery |
 
 ## Phần 3 — Reinforcement Learning với `mjlab`
 
@@ -46,7 +46,7 @@ Trước khi viết code, repo và phiên bản `mjlab` sẽ được pin rõ đ
 
 | Trạng thái | Bài | Chủ đề | Bằng chứng đầu ra |
 | --- | --- | --- | --- |
-| 🟡 | 01 | Anatomy of an RL task | observation/action/reward/termination contract |
+| 🟡 | 01 | Anatomy of an RL task | định nghĩa observation, action, reward và termination |
 | 🟡 | 02 | Vectorized training | throughput và reproducible seed |
 | ⬜ | 03 | PPO baseline | learning curve và checkpoint |
 | ⬜ | 04 | Reward engineering | reward ablation |
@@ -58,5 +58,5 @@ Trước khi viết code, repo và phiên bản `mjlab` sẽ được pin rõ đ
 1. Làm cho mọi bài hiện có chạy độc lập và kiểm tra được.
 2. Hoàn thiện coverage còn thiếu của Phần 1.
 3. Hoàn thiện bốn model/control case study cốt lõi.
-4. Chốt dependency và API contract cho `mjlab`.
+4. Chốt dependency và cách tổ chức API cho `mjlab`.
 5. Chỉ công bố kết quả RL khi có cấu hình, seed và artifact tái lập được.

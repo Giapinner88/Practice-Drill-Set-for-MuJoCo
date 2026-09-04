@@ -1,0 +1,78 @@
+<mujoco model="differential_drive_mobile_robot">
+  <compiler angle="degree"/>
+  <option timestep="0.002" integrator="implicitfast" cone="elliptic" impratio="10"
+          gravity="0 0 -9.81"/>
+
+  <visual>
+    <headlight ambient="0.35 0.35 0.35" diffuse="0.7 0.7 0.7"/>
+    <global azimuth="135" elevation="-35"/>
+  </visual>
+
+  <asset>
+    <texture name="ground_texture" type="2d" builtin="checker"
+             rgb1="0.82 0.82 0.82" rgb2="0.95 0.95 0.95" width="256" height="256"/>
+    <material name="ground_material" texture="ground_texture" texrepeat="8 8" reflectance="0.05"/>
+  </asset>
+
+  <worldbody>
+    <light name="sun" directional="true" pos="0 0 4" dir="0 0 -1"/>
+    <geom name="ground" type="plane" size="3 3 0.1" material="ground_material"
+          friction="1.0 0.01 0.001" condim="4"/>
+    <camera name="overview" pos="1.8 -2.4 2.2" target="base" mode="targetbody" fovy="50"/>
+
+    <site name="waypoint_1" type="cylinder" pos="0.8 0 0.004" size="0.06 0.004"
+          rgba="0.95 0.25 0.15 0.55"/>
+    <site name="waypoint_2" type="cylinder" pos="0.8 0.6 0.004" size="0.06 0.004"
+          rgba="0.95 0.55 0.10 0.55"/>
+    <site name="waypoint_3" type="cylinder" pos="0 0.6 0.004" size="0.06 0.004"
+          rgba="0.20 0.55 0.95 0.55"/>
+
+    <body name="base" pos="0 0 0.10">
+      <freejoint name="base_free"/>
+      <geom name="chassis" type="box" size="0.18 0.14 0.04" mass="2.0"
+            rgba="0.15 0.35 0.75 1"/>
+      <geom name="front" type="box" pos="0.15 0 0.045" size="0.04 0.10 0.015"
+            mass="0.10" rgba="0.10 0.75 0.30 1" contype="0" conaffinity="0"/>
+      <site name="imu" pos="0 0 0.05" size="0.012" rgba="1 1 0 1"/>
+
+      <body name="left_wheel" pos="0 0.165 -0.03">
+        <joint name="left_wheel_hinge" type="hinge" axis="0 1 0"
+               damping="0.02" armature="0.001"/>
+        <geom name="left_wheel_geom" type="cylinder" size="0.07 0.025"
+              euler="90 0 0" mass="0.15" rgba="0.08 0.08 0.08 1"
+              friction="1.2 0.02 0.001" condim="3" priority="1"/>
+      </body>
+
+      <body name="right_wheel" pos="0 -0.165 -0.03">
+        <joint name="right_wheel_hinge" type="hinge" axis="0 1 0"
+               damping="0.02" armature="0.001"/>
+        <geom name="right_wheel_geom" type="cylinder" size="0.07 0.025"
+              euler="90 0 0" mass="0.15" rgba="0.08 0.08 0.08 1"
+              friction="1.2 0.02 0.001" condim="3" priority="1"/>
+      </body>
+
+      <geom name="front_caster" type="sphere" pos="0.14 0 -0.075" size="0.025"
+            mass="0.05" rgba="0.25 0.25 0.25 1"
+            friction="0.05 0.005 0.0001" condim="3" priority="1"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <velocity name="left_wheel_velocity" joint="left_wheel_hinge" kv="0.4"
+              ctrlrange="-12 12" forcerange="-1.5 1.5"/>
+    <velocity name="right_wheel_velocity" joint="right_wheel_hinge" kv="0.4"
+              ctrlrange="-12 12" forcerange="-1.5 1.5"/>
+  </actuator>
+
+  <sensor>
+    <jointvel name="left_wheel_speed" joint="left_wheel_hinge"/>
+    <jointvel name="right_wheel_speed" joint="right_wheel_hinge"/>
+    <framepos name="base_position" objtype="xbody" objname="base"/>
+    <framequat name="base_orientation" objtype="xbody" objname="base"/>
+    <gyro name="base_gyro" site="imu"/>
+  </sensor>
+
+  <keyframe>
+    <key name="home" qpos="0 0 0.10 1 0 0 0 0 0" ctrl="0 0"/>
+  </keyframe>
+</mujoco>

@@ -22,14 +22,17 @@ GAIN_PATH = ARTIFACT_DIR / "lqr_gain.npy"
 POLE_MASS_KG = 1.0
 POLE_LENGTH_M = 0.5
 GRAVITY_M_S2 = 9.81
-FORCE_LIMIT_N = 10.0
+FORCE_LIMIT_N = 20.0
+ENERGY_GAIN = 15.0
+CART_POSITION_GAIN = 16.0
+CART_VELOCITY_GAIN = 2.5
 
 
 def wrap_to_pi(angle: float) -> float:
     return (angle + np.pi) % (2.0 * np.pi) - np.pi
 
 
-def run(duration: float, headless: bool) -> dict[str, np.ndarray | float]:
+def run(duration: float | None, headless: bool) -> dict[str, np.ndarray | float]:
     if not GAIN_PATH.exists():
         raise FileNotFoundError(
             f"missing {GAIN_PATH}; run mujoco_linearization.py before simulation"
@@ -89,8 +92,13 @@ def run(duration: float, headless: bool) -> dict[str, np.ndarray | float]:
                 * (1.0 - np.cos(wrapped_theta))
             )
             energy_error = energy - target_energy
-            raw_force = -20.0 * energy_error * theta_dot * np.cos(wrapped_theta)
-            raw_force += -3.0 * x - 1.5 * x_dot
+            energy_pump_force = (
+                -ENERGY_GAIN * energy_error * theta_dot * np.cos(wrapped_theta)
+            )
+            cart_centering_force = (
+                -CART_POSITION_GAIN * x - CART_VELOCITY_GAIN * x_dot
+            )
+            raw_force = energy_pump_force + cart_centering_force
 
         force = float(np.clip(raw_force, -FORCE_LIMIT_N, FORCE_LIMIT_N))
         saturated_steps += int(not np.isclose(raw_force, force))
@@ -105,11 +113,12 @@ def run(duration: float, headless: bool) -> dict[str, np.ndarray | float]:
         mujoco.mj_step(model, data)
 
     if headless:
+        assert duration is not None
         while data.time < duration:
             control_and_step()
     else:
         with mujoco.viewer.launch_passive(model, data) as viewer:
-            while viewer.is_running() and data.time < duration:
+            while viewer.is_running() and (duration is None or data.time < duration):
                 step_start = time.perf_counter()
                 control_and_step()
                 viewer.sync()
@@ -153,16 +162,18 @@ def save_plot(result: dict[str, np.ndarray | float]) -> Path:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--duration", type=float, default=30.0)
+    parser.add_argument("--duration", type=float, help="simulation seconds; viewer is unlimited by default")
     parser.add_argument("--headless", action="store_true")
     args = parser.parse_args()
-    if args.duration <= 0:
+    if args.duration is not None and args.duration <= 0:
         parser.error("--duration must be positive")
-    result = run(args.duration, args.headless)
+    duration = args.duration if args.duration is not None else (5.0 if args.headless else None)
+    result = run(duration, args.headless)
     plot_path = save_plot(result)
     balance_fraction = float(np.mean(np.asarray(result["mode"])))
+    simulated_time = float(np.asarray(result["time"])[-1])
     print(
-        f"duration={args.duration:.3f} s balance_mode_fraction={balance_fraction:.6f} "
+        f"simulated_time={simulated_time:.3f} s balance_mode_fraction={balance_fraction:.6f} "
         f"saturation_fraction={result['saturation_fraction']:.6f}"
     )
     print(f"plot={plot_path}")

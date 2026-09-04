@@ -26,12 +26,13 @@ Mỗi README phải trả lời được các câu hỏi sau:
 8. Bài tập nào buộc người học sửa model hoặc code?
 9. Nguồn chính thống nào hỗ trợ phần lý thuyết/API?
 
-## Contract của script
+## Quy ước cho script
 
 - Dùng `Path(__file__)` để tìm asset/model.
 - Có `main()` và guard `if __name__ == "__main__"`.
-- Hỗ trợ `--duration` để giới hạn simulation time.
-- Hỗ trợ `--headless` nếu bài không phụ thuộc GUI.
+- Có `--duration` tùy chọn để giới hạn simulation time.
+- Viewer mặc định chạy đến khi người dùng đóng cửa sổ/nhấn ESC.
+- Hỗ trợ `--headless` nếu bài không phụ thuộc GUI; headless phải có thời lượng mặc định hữu hạn.
 - Tách simulation time khỏi wall-clock time.
 - Không ghi artifact ra root của repo.
 - Nếu tạo artifact, ghi vào `lesson/artifacts/` và in đường dẫn.
@@ -42,7 +43,7 @@ Mỗi README phải trả lời được các câu hỏi sau:
 - XML well-formed chỉ là kiểm tra cú pháp, chưa phải model hợp lệ.
 - Model hợp lệ khi `MjModel.from_xml_path` biên dịch thành công.
 - Smoke test phải tạo `MjData`, gọi `mj_forward`, chạy một số bước và kiểm tra giá trị hữu hạn.
-- Claim vật lý cần so sánh với nghiệm giải tích, invariant, baseline hoặc phép đo độc lập.
+- Kết luận về vật lý cần so sánh với nghiệm giải tích, invariant, mốc so sánh hoặc phép đo độc lập.
 - Bài control phải báo actuator limits, timestep, initial condition và metric.
 - Bài RL phải báo config, seed, training steps, evaluation episodes và checkpoint provenance.
 
@@ -50,5 +51,6 @@ Mỗi README phải trả lời được các câu hỏi sau:
 
 - Tiếng Việt là ngôn ngữ giải thích chính; giữ thuật ngữ tiếng Anh lần đầu xuất hiện.
 - Tên class/hàm/tag phải đúng chữ hoa-thường: `MjModel`, `MjData`, `mj_step`.
+- Công thức inline dùng `$...$`; công thức tách dòng đặt giữa hai dòng dấu dollar kép. Không dùng delimiter dạng backslash–parenthesis hoặc backslash–bracket trong Markdown.
 - Mọi vector phải nêu frame; mọi đại lượng vật lý phải nêu đơn vị.
 - Không dùng “chính xác”, “hội tụ”, “ổn định” hoặc “sim-to-real” nếu chưa nêu điều kiện chứng minh.

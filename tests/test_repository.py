@@ -9,15 +9,24 @@ import mujoco
 import numpy as np
 import pytest
 
+from tools.validate_repo import (
+    validate_acrobot,
+    validate_lesson_invariants,
+    validate_mobile_robot,
+    validate_quadrotor,
+    validate_so101,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
 PART_DIRS = (ROOT / "part_1_foundations", ROOT / "part_2_models_control")
 LESSON_DIRS = sorted(
-    directory
-    for part_dir in PART_DIRS
-    for directory in part_dir.iterdir()
-    if directory.is_dir() and (directory / "model.xml").exists()
+    {
+        model_path.parent
+        for part_dir in PART_DIRS
+        for model_path in part_dir.rglob("model.xml")
+    }
 )
-MODEL_PATHS = sorted(path for part_dir in PART_DIRS for path in part_dir.glob("*/*.xml"))
+MODEL_PATHS = sorted(path for part_dir in PART_DIRS for path in part_dir.rglob("*.xml"))
 
 
 @pytest.mark.parametrize("lesson_dir", LESSON_DIRS, ids=lambda path: path.name)
@@ -27,7 +36,7 @@ def test_lesson_contract(lesson_dir: Path) -> None:
     assert list(lesson_dir.glob("*.py"))
 
 
-@pytest.mark.parametrize("script", sorted(ROOT.glob("part_*/*/*.py")), ids=lambda path: path.name)
+@pytest.mark.parametrize("script", sorted(ROOT.glob("part_*/**/*.py")), ids=lambda path: path.name)
 def test_python_syntax(script: Path) -> None:
     ast.parse(script.read_text(encoding="utf-8"), filename=str(script))
 
@@ -62,3 +71,23 @@ def test_cartpole_linearization_matches_analytical_convention() -> None:
     expected_b_lower = np.array([[1.0], [-2.0]])
     assert np.allclose(a_discrete[model.nv :, : model.nv] / dt, expected_a_lower_left, rtol=2e-4, atol=2e-4)
     assert np.allclose(b_discrete[model.nv :, :] / dt, expected_b_lower, rtol=2e-4, atol=2e-4)
+
+
+def test_lesson_specific_invariants() -> None:
+    assert validate_lesson_invariants() == []
+
+
+def test_acrobot_contracts() -> None:
+    assert validate_acrobot() == []
+
+
+def test_so101_contracts() -> None:
+    assert validate_so101() == []
+
+
+def test_mobile_robot_contracts() -> None:
+    assert validate_mobile_robot() == []
+
+
+def test_quadrotor_contracts() -> None:
+    assert validate_quadrotor() == []

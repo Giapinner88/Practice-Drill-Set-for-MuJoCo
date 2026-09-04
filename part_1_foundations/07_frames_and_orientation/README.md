@@ -1,8 +1,8 @@
 # P1-07 — Frames và orientation
 
-## Chuẩn đầu ra
+## Sau bài này, bạn có thể
 
-Người học biểu diễn pose tương đối, đọc quaternion theo thứ tự MuJoCo và nhận biết rủi ro khi dùng Euler angles.
+Biểu diễn pose tương đối, đọc quaternion theo thứ tự MuJoCo và nhận biết trường hợp Euler angles gây nhầm lẫn.
 
 ## Quy ước
 

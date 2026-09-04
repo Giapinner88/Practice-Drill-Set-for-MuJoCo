@@ -1,15 +1,26 @@
 <mujoco model="body_hierarchy">
     <compiler angle="degree"/>
-    <option gravity="0 0 -9.81" timestep="0.002"/>
-    <size nconmax="100"/>
+    <option gravity="0 0 -9.81" timestep="0.002" integrator="RK4"/>
 
     <worldbody>
-        <light pos="0 0 5" dir="0 0 -1" directional="true"/>
-        <geom name="ground" type="plane" size="5 5 0.1" rgba="0.8 0.9 0.8 1"/>
-        
-        <body name="falling_box" pos="0 0 2">
-            <freejoint name="root_joint"/>
-            <geom name="box_geometry" type="box" size="0.5 0.5 0.5" rgba="0.2 0.8 0.2 1"/>
+        <light pos="0 -2 4" dir="0 1 -1" directional="true"/>
+        <geom name="ground" type="plane" size="3 3 0.1" rgba="0.8 0.9 0.8 1"/>
+
+        <!-- No joint: base is welded to world. -->
+        <body name="base" pos="0 0 1.5">
+            <geom name="base_geom" type="box" size="0.15 0.2 0.15" rgba="0.2 0.3 0.8 1"/>
+
+            <!-- Its pose is expressed in the base frame. -->
+            <body name="arm_link" pos="0 0 0">
+                <joint name="shoulder" type="hinge" axis="0 1 0" damping="0.05"/>
+                <geom name="arm_geom" type="capsule" fromto="0 0 0 0 0 -0.8" size="0.05" rgba="0.2 0.8 0.3 1"/>
+
+                <!-- No joint: tool is welded to arm_link but keeps its own frame. -->
+                <body name="tool" pos="0 0 -0.8">
+                    <geom name="tool_geom" type="sphere" size="0.1" rgba="0.9 0.3 0.2 1"/>
+                    <site name="tool_center" type="sphere" size="0.02" rgba="1 1 0 1"/>
+                </body>
+            </body>
         </body>
     </worldbody>
 </mujoco>

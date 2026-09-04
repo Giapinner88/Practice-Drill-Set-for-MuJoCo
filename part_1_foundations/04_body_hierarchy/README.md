@@ -1,43 +1,45 @@
-# P1-04 — Body hierarchy và free joint
+# P1-04 — Body hierarchy và local/world frames
 
-## Chuẩn đầu ra
+## Sau bài này, bạn có thể
 
-Người học đọc được cây body, phân biệt world pose với local pose và giải thích ánh xạ giữa joint, generalized coordinates và degrees of freedom.
+Đọc cây body, phân biệt local pose với world pose và giải thích vì sao một body không có joint vẫn giữ frame riêng nhưng chuyển động cùng body cha.
 
-## Cây động học
+## Cây trong bài
 
-MuJoCo tổ chức body thành cây có gốc là world. `pos` và orientation của một body được khai báo tương đối với frame cha. Một body không có joint được weld vào cha; một body có `freejoint` chuyển động 6 DOF so với world.
-
-Trong model:
-
-- `falling_box` có local position ban đầu `(0, 0, 2)` m;
-- `root_joint` là free joint;
-- `box_geometry` nằm tại gốc frame của body;
-- inertia được compiler suy ra từ geometry vì body không khai báo `<inertial>`.
-
-Suy diễn inertia từ geometry phù hợp cho bài nhập môn, nhưng không đủ để đại diện robot thật có motor, vỏ rỗng và phân bố khối lượng không đồng đều.
-
-## Python API cần quan sát
-
-```python
-body_id = model.body("falling_box").id
-print(data.xpos[body_id])
-print(model.nq, model.nv)
+```text
+world
+└── base                 welded to world
+    └── arm_link         hinge: shoulder
+        └── tool         welded to arm_link
+            └── site: tool_center
 ```
 
-`data.xpos` chỉ hợp lệ sau `mj_forward` hoặc một bước simulation. Không đồng nhất `data.xpos` với đoạn tương ứng của `qpos`: chúng biểu diễn các tập tọa độ khác nhau.
+`body_pos` trong `MjModel` là vị trí local được biên dịch từ XML. `xpos` và `xquat` trong `MjData` là pose world được tính bởi forward kinematics. Thay đổi góc `shoulder` làm world pose của `arm_link`, `tool` và `tool_center` thay đổi, trong khi `model.body_pos` không đổi.
 
-## Chạy và bài tập
+Body `base` không có joint nên weld với world. `tool` không có joint nên weld với `arm_link`; nó không thêm DOF, nhưng frame riêng vẫn hữu ích để gắn geom, site, sensor hoặc camera.
+
+## Chạy thí nghiệm
 
 ```bash
-python part_1_foundations/04_body_hierarchy/simulate.py
+python part_1_foundations/04_body_hierarchy/simulate.py --initial-angle-deg 45
+python part_1_foundations/04_body_hierarchy/simulate.py --headless --duration 0.1 --initial-angle-deg 90
 ```
 
-1. In `qpos` và `xpos` tại thời điểm 0 rồi giải thích kích thước.
-2. Bỏ `freejoint`; dự đoán `nq`, `nv` và chuyển động.
-3. Thêm body con lệch 0.5 m; so sánh local pose trong XML với world pose trong `xpos`.
+Script in ra parent ID, local position và world pose trước/sau khi đặt joint angle. Ở mọi góc, khoảng cách từ shoulder tới tâm tool phải bằng 0.8 m trong sai số số học.
+
+## Phép kiểm chứng
+
+1. Xác nhận `parent(tool) == arm_link` và `parent(arm_link) == base`.
+2. Xác nhận model chỉ có một generalized coordinate và một velocity: `nq == nv == 1`.
+3. Tính chuẩn Euclid giữa `xpos(tool)` và `xpos(arm_link)`; kết quả phải giữ 0.8 m khi đổi góc.
+
+## Bài tập
+
+1. Thêm một joint vào `tool`; dự đoán `nq`, `nv` trước khi chạy.
+2. Đổi `tool pos` sang `0.2 0 -0.8`; kiểm tra khoảng cách và world trajectory.
+3. Đọc pose của `tool_center` qua named access và so với body `tool`.
 
 ## Tài liệu
 
-- [Modeling concepts](https://mujoco.readthedocs.io/en/stable/modeling.html)
-- [MJCF body and joint](https://mujoco.readthedocs.io/en/stable/XMLreference.html#body)
+- [Kinematic tree](https://mujoco.readthedocs.io/en/stable/modeling.html#kinematic-tree)
+- [MJCF body](https://mujoco.readthedocs.io/en/stable/XMLreference.html#body)

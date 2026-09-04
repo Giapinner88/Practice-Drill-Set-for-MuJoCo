@@ -1,8 +1,8 @@
-# P1-09 — Light sources
+# P1-08 — Light sources
 
-## Chuẩn đầu ra
+## Sau bài này, bạn có thể
 
-Người học phân biệt directional và positional light, điều chỉnh diffuse/specular/shadow và hiểu rằng lighting chỉ ảnh hưởng rendering.
+Phân biệt directional, point và spot light; điều chỉnh diffuse, specular và shadow mà không thay đổi dynamics.
 
 ## Các nguồn sáng trong model
 
@@ -11,14 +11,14 @@ Người học phân biệt directional và positional light, điều chỉnh di
 - `blue_spot`: nguồn có hướng/cutoff để quan sát vùng chiếu.
 - `ambient`: positional fill light cường độ thấp trong scene demo.
 
-Các material `shiny` và `matte` tạo đối chứng về specular response. Các geometry trong ba vùng giữ hình học tương tự để hạn chế biến gây nhiễu khi quan sát.
+Các material `shiny` và `matte` cho phản xạ specular khác nhau. Ba vùng dùng các vật thể có hình dạng gần giống nhau để bạn dễ so sánh ánh sáng.
 
 Lighting không thay đổi state dynamics. Nếu mọi actuator/state/physics parameter giữ nguyên, thay đổi light không được làm thay đổi `qpos` hoặc contact.
 
 ## Chạy thí nghiệm
 
 ```bash
-python part_1_foundations/09_lights/simulate.py
+python part_1_foundations/08_lights/simulate.py
 ```
 
 ## Bài tập

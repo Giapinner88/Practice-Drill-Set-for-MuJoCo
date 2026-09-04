@@ -1,16 +1,16 @@
 # P1-03 — Gravity và ground contact
 
-## Chuẩn đầu ra
+## Sau bài này, bạn có thể
 
-Người học tạo vật thể động bằng `freejoint`, cấu hình gravity/timestep và quan sát quá trình rơi–tiếp xúc thay vì chỉ nhìn một cảnh tĩnh.
+Tạo vật thể động bằng `freejoint`, cấu hình gravity và timestep, sau đó đo chuyển động rơi trước khi vật thể chạm đất.
 
 ## Mô hình vật lý
 
 Trong pha rơi tự do, bỏ qua cản không khí:
 
-\[
+$$
 z(t)=z_0+v_{z,0}t-\frac{1}{2}gt^2.
-\]
+$$
 
 Quan hệ này chỉ áp dụng trước lần tiếp xúc đầu tiên. Sau tiếp xúc, gia tốc phụ thuộc contact solver, restitution hiệu dụng và timestep.
 
@@ -32,7 +32,7 @@ python part_1_foundations/03_gravity_and_ground/simulate.py
 python part_1_foundations/03_gravity_and_ground/simulate.py --headless --duration 1
 ```
 
-Kết quả kỳ vọng: box rơi theo trục −Z và không xuyên qua plane ở trạng thái đã hội tụ. Không dùng vị trí sau va chạm để “chứng minh” công thức rơi tự do.
+Script tự ghi vị trí tại 0.1 s và so với nghiệm ballistic trước contact. Với timestep 0.002 s, sai số phải ở cỡ milimet hoặc nhỏ hơn và số contact tại mốc kiểm tra phải bằng zero. Sau contact, không dùng công thức rơi tự do để diễn giải trajectory.
 
 ## Bài tập
 
