@@ -1,0 +1,57 @@
+<!-- ======================================================================
+     MODEL CỐ TÌNH SAI — dùng cho phần 110-117 phút (Viewer debugging).
+
+     File này chứa BA lỗi so với model.xml. Cả ba đều là lỗi model hợp lệ
+     về cú pháp: MuJoCo biên dịch trót lọt, không báo gì cả, chỉ có chuyển
+     động là sai. Đó đúng là loại lỗi khó nhất.
+
+     Nhiệm vụ: chạy `python simulate.py --broken`, bật các lớp hiển thị
+     trong Viewer và tìm ra cả ba. Đáp án ở cuối README.md — đừng mở vội.
+
+     Gợi ý: nhấn Tab, panel trái, mục Rendering, bật:
+        Joint  (vẽ trục quay/trượt của từng joint)
+        Frame -> Body  (vẽ hệ trục gắn với từng body)
+        Com    (vẽ khối tâm)
+     ====================================================================== -->
+<mujoco model="cartpole_broken">
+
+  <option timestep="0.002" gravity="0 0 -9.81"/>
+
+  <visual>
+    <map znear="0.01" zfar="10"/>
+  </visual>
+
+  <worldbody>
+    <light pos="0 -2 3" dir="0 1 -1" directional="true" castshadow="true"/>
+    <camera name="cam_side" pos="0 -3.2 1.1" quat="0.7071 0.7071 0 0"/>
+
+    <geom name="floor" type="plane" size="3 3 0.1" rgba="0.85 0.88 0.85 1"/>
+    <geom name="rail" type="capsule" fromto="-1.2 0 1.0  1.2 0 1.0" size="0.008"
+          rgba="0.35 0.35 0.35 1" contype="0" conaffinity="0"/>
+
+    <body name="cart" pos="0 0 1.0">
+      <joint name="cart_slide" type="slide" axis="0 1 0"
+             limited="true" range="-1 1" damping="0.05"/>
+
+      <geom name="cart_geom" type="box" size="0.15 0.1 0.05" mass="1.0"
+            rgba="0.15 0.35 0.85 1"/>
+
+      <body name="pole" pos="0 0 0.5">
+        <joint name="pole_hinge" type="hinge" axis="1 0 0" damping="0.01"/>
+
+        <geom name="pole_geom" type="capsule" fromto="0 0 0  0 0 0.6" size="0.02"
+              mass="0.1" rgba="0.85 0.25 0.2 1" contype="0" conaffinity="0"/>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor name="cart_motor" joint="cart_slide" gear="1"
+           ctrllimited="true" ctrlrange="-10 10"/>
+  </actuator>
+
+  <keyframe>
+    <key name="tilted" qpos="0 0.2" qvel="0 0" ctrl="0"/>
+  </keyframe>
+
+</mujoco>

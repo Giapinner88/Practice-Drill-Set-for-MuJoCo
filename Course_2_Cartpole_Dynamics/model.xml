@@ -1,0 +1,85 @@
+<mujoco model="cartpole_dynamics">
+
+  <!-- ===================================================================
+       <option> — cấu hình BỘ GIẢI, áp dụng cho toàn bộ mô phỏng.
+       timestep : độ phân giải thời gian. Nhỏ = chính xác + tốn CPU.
+       gravity  : vector trọng trường (m/s^2) theo trục x y z.
+       Hai tham số này là đối tượng của Experiment 1 và 5 trong README.
+       =================================================================== -->
+  <option timestep="0.002" gravity="0 0 -9.81"/>
+
+  <visual>
+    <map znear="0.01" zfar="10"/>
+    <global offwidth="1280" offheight="720"/>
+  </visual>
+
+  <!-- <default> — giá trị mặc định dùng chung, khỏi lặp lại ở mỗi thẻ. -->
+  <default>
+    <geom rgba="0.7 0.7 0.75 1"/>
+  </default>
+
+  <worldbody>
+    <light pos="0 -2 3" dir="0 1 -1" directional="true" castshadow="true"/>
+    <camera name="cam_side" pos="0 -3.2 1.1" quat="0.7071 0.7071 0 0"/>
+
+    <geom name="floor" type="plane" size="3 3 0.1" rgba="0.85 0.88 0.85 1"/>
+
+    <!-- Thanh ray chỉ để NHÌN: contype/conaffinity = 0 nên không va chạm. -->
+    <geom name="rail" type="capsule" fromto="-1.2 0 1.0  1.2 0 1.0" size="0.008"
+          rgba="0.35 0.35 0.35 1" contype="0" conaffinity="0"/>
+
+    <!-- =================================================================
+         CART — bậc tự do thứ nhất.
+         slide joint dọc trục x  ->  qpos[0] = vị trí cart (m).
+         range + limited : cart chạm biên ở +-1 m (mục 55-60 phút).
+         damping         : ma sát nhớt tại khớp (mục 60-65 phút).
+         ================================================================= -->
+    <body name="cart" pos="0 0 1.0">
+      <joint name="cart_slide" type="slide" axis="1 0 0"
+             limited="true" range="-1 1" damping="0.05"/>
+
+      <geom name="cart_geom" type="box" size="0.15 0.1 0.05" mass="1.0"
+            rgba="0.15 0.35 0.85 1"/>
+
+      <!-- ===============================================================
+           POLE — bậc tự do thứ hai, là CON của cart.
+           Vì nằm trong <body name="cart">, gốc pole di chuyển theo cart:
+           đó chính là coupling ở mức cấu trúc model.
+           hinge quanh trục y  ->  qpos[1] = góc pole (rad).
+           =============================================================== -->
+      <body name="pole" pos="0 0 0.05">
+        <joint name="pole_hinge" type="hinge" axis="0 1 0" damping="0.01"/>
+
+        <!-- Thanh pole: capsule dài 0.6 m, gốc quay ở đầu dưới.
+             mass khai báo ở đây -> MuJoCo TỰ tính inertia từ hình học. -->
+        <geom name="pole_geom" type="capsule" fromto="0 0 0  0 0 0.6" size="0.02"
+              mass="0.1" rgba="0.85 0.25 0.2 1" contype="0" conaffinity="0"/>
+      </body>
+    </body>
+  </worldbody>
+
+  <!-- ===================================================================
+       ACTUATOR — chỉ cart được truyền động, pole thì KHÔNG (underactuated).
+       data.ctrl[0] -> motor -> lực dọc trục của cart_slide.
+       gear = 1 nên ctrl = 1 tương ứng 1 N.
+       =================================================================== -->
+  <actuator>
+    <motor name="cart_motor" joint="cart_slide" gear="1"
+           ctrllimited="true" ctrlrange="-10 10"/>
+  </actuator>
+
+  <!-- Sensor: cách đọc state có TÊN, không phải đoán index. -->
+  <sensor>
+    <jointpos joint="cart_slide" name="cart_pos"/>
+    <jointvel joint="cart_slide" name="cart_vel"/>
+    <jointpos joint="pole_hinge" name="pole_angle"/>
+    <jointvel joint="pole_hinge" name="pole_angvel"/>
+  </sensor>
+
+  <!-- Keyframe: pole lệch 0.2 rad khỏi phương thẳng đứng để nó tự đổ,
+       thay vì đứng cân bằng không bền một cách giả tạo tại qpos = 0. -->
+  <keyframe>
+    <key name="tilted" qpos="0 0.2" qvel="0 0" ctrl="0"/>
+  </keyframe>
+
+</mujoco>
