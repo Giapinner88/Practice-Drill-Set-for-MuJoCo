@@ -1,12 +1,6 @@
 """
 Course 2 - Cart-pole: form chuẩn của một chương trình MuJoCo.
 
-Cùng bộ khung như Course 1:
-    nạp model  ->  tạo data  ->  vòng lặp (step, sync)
-
-Khác biệt: model lần này chỉ có HAI bậc tự do, đủ đơn giản để nhìn thấy
-rõ từng tham số vật lý trong model.xml ảnh hưởng lên chuyển động thế nào.
-
 Lực đẩy cart điều khiển bằng THANH TRƯỢT trong viewer (nhấn Tab -> Control),
 không cần sửa code.
 

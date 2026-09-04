@@ -19,7 +19,18 @@
 
   <visual>
     <map znear="0.01" zfar="10"/>
+    <global offwidth="1280" offheight="720"/>
+    <!-- Nền sáng: hình render ra dùng thẳng cho slide, nền đen mặc định
+         của MuJoCo chìm nghỉm trên nền trắng của slide. -->
+    <rgba haze="0.9 0.93 0.96 1"/>
+    <headlight ambient="0.5 0.5 0.5" diffuse="0.5 0.5 0.5"
+               specular="0.1 0.1 0.1"/>
   </visual>
+
+  <asset>
+    <texture name="sky" type="skybox" builtin="gradient"
+             rgb1="0.72 0.80 0.90" rgb2="0.95 0.96 0.98" width="256" height="256"/>
+  </asset>
 
   <worldbody>
     <light pos="0 -2 3" dir="0 1 -1" directional="true" castshadow="true"/>

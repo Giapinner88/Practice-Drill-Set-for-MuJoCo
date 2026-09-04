@@ -1,32 +1,63 @@
-# Course 2 — Cart-pole: Động lực học trong MuJoCo
+# Buổi 2 — Cart-pole: Động lực học trong MuJoCo
 
-**Thời lượng:** 120 phút · **Yêu cầu trước:** Course 1 (SO-101 cơ bản)
+> **Giáo án cho người trình bày.** File này là kịch bản để chuẩn bị buổi dạy, không phải tài liệu phát cho học viên.
 
-Buổi 1 trả lời câu hỏi *"làm sao mô tả một hệ?"*. Buổi 2 trả lời câu hỏi tiếp theo: *"MuJoCo mô phỏng hệ đó như thế nào, và tham số nào quyết định kết quả?"*
+**Thời lượng:** 120 phút · **Yêu cầu trước:** Buổi 1 (SO-101 cơ bản)
 
-Toàn bộ buổi học chỉ dùng **một mô hình duy nhất — cart-pole**. Hai bậc tự do, một actuator: đủ đơn giản để nhìn thấy rõ từng tham số vật lý ảnh hưởng lên chuyển động ra sao, mà vẫn đủ giàu để có coupling thật.
+Buổi 1 trả lời *"làm sao mô tả một hệ?"*. Buổi 2 trả lời câu tiếp theo: *"MuJoCo mô phỏng hệ đó thế nào, và tham số nào quyết định kết quả?"*
+
+Cả buổi chỉ dùng **một mô hình — cart-pole**. Hai bậc tự do, một actuator: đủ đơn giản để mỗi lần sửa một tham số là thấy ngay khác biệt, mà vẫn đủ giàu để có coupling thật.
+
+Cách dạy xuyên suốt: **sửa `model.xml`, chạy lại, nhìn viewer**. Không có script phân tích nào — học viên tune bằng tay, và chính việc phải tự đoán trước rồi kiểm chứng mới là phần dạy được.
 
 ```
 Course_2_Cartpole_Dynamics/
-├── model.xml          # cart-pole, chú thích từng tham số
-├── model_broken.xml   # bản cố tình sai 3 lỗi — dùng ở phần debug
-├── simulate.py        # ★ BẮT ĐẦU TỪ ĐÂY — form chuẩn, đẩy cart bằng thanh trượt
-├── inspect_state.py   # đọc qpos/qvel/sensor, ghi ctrl — không đồ hoạ
-├── experiments.py     # 5 thí nghiệm đổi tham số, in kết quả bằng số
-└── README.md
+├── model.xml              # cart-pole, chú thích từng tham số — file để tune
+├── model_broken.xml       # bản cố tình sai 3 lỗi — dùng ở phần debug
+├── simulate.py            # chạy + xem, giống hệt form của buổi 1
+├── make_slides_media.py   # sinh hình + video cho slide (chạy khi soạn bài)
+├── media/                 # kết quả: 10 PNG + 5 MP4, bỏ thẳng vào slide
+└── README.md              # giáo án này
 ```
-
-## Chạy thử
 
 ```bash
-python simulate.py            # kéo thanh trượt để đẩy cart
-python inspect_state.py       # in state ra terminal
-python experiments.py         # chạy cả 5 thí nghiệm
-python experiments.py 3       # chỉ chạy thí nghiệm số 3
-python simulate.py --broken   # model lỗi, dùng ở phần 110-117 phút
+python simulate.py            # tune tham số trong model.xml rồi chạy lại
+python simulate.py --broken   # model lỗi, dùng ở phần 110–117 phút
+
+python make_slides_media.py           # sinh lại toàn bộ media
+python make_slides_media.py damping   # chỉ sinh lại một mục
+python make_slides_media.py --list    # xem danh sách mục
 ```
 
-Cần `pip install mujoco`. Nhấn **ESC** tại cửa sổ viewer để thoát.
+Cần `pip install mujoco matplotlib`. Muốn xuất video thì cần thêm `ffmpeg` trong PATH — không có cũng chạy được, chỉ bỏ qua phần `.mp4`.
+
+Nhấn **ESC** để thoát viewer.
+
+---
+
+## Media cho slide
+
+Chạy `make_slides_media.py` một lần, lấy file trong `media/` chèn vào slide. Cột cuối là mốc thời gian nên dùng.
+
+| File | Nội dung | Dùng ở phút |
+|---|---|---:|
+| `00_overview.mp4` | cart-pole tự đổ — mở đầu buổi | 10–15 |
+| `01_coupling.mp4` · `.png` | đẩy cart, pole lắc theo dù không có actuator | 15–20 |
+| `02_gravity.png` | ba mức trọng lực, g = 0 pole đứng yên | 95–110 |
+| `02_gravity_zero.mp4` | pole treo bất động trong môi trường g = 0 | 95–110 |
+| `03_mass.png` | pole nặng hơn → cart tăng tốc chậm hơn | 40–45 |
+| `04_inertia.png` | pole dài gấp đôi đổ chậm hơn, kèm số inertia | 50–55 |
+| `05_damping.png` | bốn mức damping, có chú thích overdamped | 60–65 |
+| `05_damping_0.mp4` | damping = 0: đung đưa mãi | 60–65 |
+| `05_damping_1_0.mp4` | damping = 1.0: bò chậm, không dao động | 60–65 |
+| `06_ctrlrange.png` | ctrl = 50 trùng khít ctrl = 10 | 75–80 |
+| `07_timestep.png` | quỹ đạo lệch dần + sai số RMS thang log | 95–110 |
+| `08_broken_vs_correct.png` | đúng vs sai, đã bật Joint + Com | 110–117 |
+| `09_state_sequence.png` | chuỗi ảnh pole đổ, minh hoạ qpos | 80–90 |
+
+Ảnh 1280×720, video 60 fps — vừa khung slide 16:9.
+
+> **Khi sửa `model.xml`:** script sinh media tạo biến thể bằng cách thay chuỗi trong XML gốc. Nếu bạn đổi cách viết các thuộc tính đó, script sẽ **báo lỗi ngay** thay vì âm thầm sinh ra hình trong đó mọi đường trùng khít nhau. Gặp lỗi `variant(...): khớp 0 chỗ` thì mở `variant()` cập nhật lại pattern.
 
 ---
 
@@ -36,66 +67,52 @@ Sau buổi này, người học cần:
 
 - Hiểu cart-pole dưới góc nhìn một hệ cơ học.
 - Dựng được một cart-pole bằng MJCF từ con số không.
-- Hiểu các tham số vật lý chính: `mass`, `inertia`, `damping`, `friction`, `gravity`, `timestep`.
-- Thiết lập được joint và actuator cho cart-pole.
-- Đọc được state của hệ qua `qpos`, `qvel` — và **tra index thay vì đoán**.
-- Tác động lực qua `ctrl`.
+- Hiểu các tham số vật lý chính: `mass`, `inertia`, `damping`, `frictionloss`, `gravity`, `timestep`.
+- Thiết lập được joint và actuator.
+- Biết `qpos`, `qvel`, `ctrl` chứa gì.
 - Quan sát được ảnh hưởng của việc đổi tham số lên dynamics.
 - Dùng được Viewer để debug model.
-- Hiểu ở mức trực quan MuJoCo đang tính dynamics như thế nào.
 
-Mental model chính của buổi:
+Mental model chính:
 
 ```text
-MJCF parameters
-      ↓
-  MuJoCo model
-      ↓
- State + Input
-      ↓
-Physics simulation
-      ↓
-   Motion
+MJCF parameters → MuJoCo model → State + Input → Physics → Motion
 ```
 
 ---
 
 # TIMELINE
 
-| Thời gian | Nội dung | File liên quan |
-|---:|---|---|
-| 0–10 | Recap buổi 1 | — |
-| 10–25 | Hiểu hệ cart-pole | — |
-| 25–40 | Dựng cart-pole bằng MJCF | `model.xml` |
-| 40–55 | Mass, inertia và geometry | `model.xml` |
-| 55–70 | Joint dynamics | `model.xml` |
-| 70–80 | Actuator setup | `model.xml` |
-| 80–95 | State inspection | `inspect_state.py` |
-| 95–110 | Hands-on experiments | `experiments.py` |
-| 110–117 | Viewer debugging | `model_broken.xml` |
-| 117–120 | Tổng kết | — |
+| Thời gian | Nội dung | Hoạt động | Media |
+|---:|---|---|---|
+| 0–10 | Recap buổi 1 | giảng | — |
+| 10–25 | Hiểu hệ cart-pole | giảng | `00_overview` · `01_coupling` |
+| 25–40 | Dựng cart-pole bằng MJCF | đọc `model.xml` | — |
+| 40–55 | Mass, inertia và geometry | **tune tay** | `03_mass` · `04_inertia` |
+| 55–70 | Joint dynamics | **tune tay** | `05_damping` |
+| 70–80 | Actuator setup | **tune tay** | `06_ctrlrange` |
+| 80–95 | State inspection | giảng + viewer | `09_state_sequence` |
+| 95–110 | Hands-on experiments | **tune tay** | `02_gravity` · `07_timestep` |
+| 110–117 | Viewer debugging | `--broken` | `08_broken_vs_correct` |
+| 117–120 | Tổng kết | giảng | — |
 
 ---
 
 ## 0–10 phút — Recap buổi 1
 
-Nhắc lại chuỗi mà buổi 1 đã dựng:
+Nhắc lại chuỗi đã dựng ở buổi trước:
 
 ```text
-MJCF  →  MjModel  →  MjData  →  qpos / qvel / ctrl  →  mj_step()
+MJCF → MjModel → MjData → qpos / qvel / ctrl → mj_step()
 ```
 
-Buổi trước ta coi:
-
-```python
-mujoco.mj_step(model, data)
-```
-
-như một **black box**. Buổi này tập trung đúng một câu hỏi:
+Buổi trước ta coi `mujoco.mj_step(model, data)` như một **black box**. Buổi này tập trung đúng một câu:
 
 > Những tham số nào quyết định kết quả bên trong black box đó?
 
-Cart-pole là model tối thiểu để quan sát rõ điều đó: chỉ 2 DOF, nên mọi thay đổi đều nhìn thấy được ngay.
+**Chốt:** cart-pole là model tối thiểu để thấy rõ điều đó — chỉ 2 DOF nên mọi thay đổi đều nhìn thấy được ngay.
+
+> 🎬 `media/00_overview.mp4` — chiếu ngay lúc này để lớp thấy hệ sẽ làm việc suốt buổi.
 
 ---
 
@@ -109,8 +126,6 @@ World
       └── Pole (quay quanh trục y)
 ```
 
-Hai bậc tự do. Generalized coordinates và state:
-
 $$
 q = \begin{bmatrix} x \\ \theta \end{bmatrix}
 \qquad
@@ -121,7 +136,7 @@ $$
 
 ```text
 qpos → configuration (hệ đang ở đâu)
-qvel → motion state  (hệ đang chuyển động thế nào)
+qvel → motion state  (đang chuyển động thế nào)
 ```
 
 ### 15–20 phút — Input và coupling
@@ -129,10 +144,12 @@ qvel → motion state  (hệ đang chuyển động thế nào)
 Cart được tác động bằng một lực duy nhất, $u = F$:
 
 ```text
-force  →  cart moves  →  pole reacts
+force → cart moves → pole reacts
 ```
 
-Điểm mấu chốt: **pole không có actuator nào cả**. Nó chuyển động hoàn toàn do quán tính và trọng lực, gián tiếp qua cart. Hệ như vậy gọi là **underactuated** — 2 DOF nhưng chỉ 1 input. Đây là lý do cart-pole là bài toán kinh điển của điều khiển.
+**Điểm phải nhấn:** pole **không có actuator nào**. Nó chuyển động hoàn toàn do quán tính và trọng lực, gián tiếp qua cart. Hệ 2 DOF nhưng chỉ 1 input gọi là **underactuated** — đây là lý do cart-pole thành bài toán kinh điển của điều khiển, và là cầu nối sang phần LQR ở part 2.
+
+> 🎬 `media/01_coupling.mp4` + 📊 `media/01_coupling.png` — biểu đồ cho thấy lực tắt ở 0.35 s, cart dừng hẳn lúc chạm biên, **mà pole vẫn lắc tiếp**. Đó là bằng chứng trực quan nhất cho coupling.
 
 ### 20–25 phút — Dynamics ở mức cần thiết
 
@@ -140,7 +157,7 @@ $$
 M(q)\ddot q + C(q,\dot q)\dot q + g(q) = Bu
 $$
 
-Không derive. Chỉ cần đọc được từng số hạng tương ứng với tham số nào trong MJCF:
+**Không derive.** Chỉ cần học viên đọc được từng số hạng ứng với tham số nào trong MJCF:
 
 | Số hạng | Ý nghĩa | Ở đâu trong MJCF |
 |---|---|---|
@@ -155,7 +172,7 @@ MuJoCo giải phương trình này ở **mỗi** simulation step.
 
 ## 25–40 phút — Dựng cart-pole bằng MJCF
 
-Mở [model.xml](model.xml) và đọc theo thứ tự dưới đây. File đã chú thích sẵn từng khối.
+Mở [model.xml](model.xml) và đọc theo thứ tự dưới. File đã chú thích sẵn từng khối.
 
 ### 25–30 phút — World và simulation settings
 
@@ -163,14 +180,14 @@ Mở [model.xml](model.xml) và đọc theo thứ tự dưới đây. File đã 
 <option timestep="0.002" gravity="0 0 -9.81"/>
 ```
 
-**`timestep`** là độ phân giải thời gian của mô phỏng:
+`timestep` là độ phân giải thời gian:
 
 | timestep | Hệ quả |
 |---|---|
 | nhỏ (0.001) | chính xác hơn, tốn CPU hơn |
 | lớn (0.05) | chạy nhanh, sai số tích luỹ, có thể mất ổn định |
 
-Ta sẽ đo cụ thể cái giá của lựa chọn này ở **Thí nghiệm 5**.
+Sẽ quay lại tune ở phần 95–110.
 
 ### 30–35 phút — Cart body
 
@@ -186,11 +203,9 @@ Cấu trúc lặp lại ở mọi model MuJoCo:
 
 ```text
 body
- ├── joint  (body này cử động thế nào so với cha)
- └── geom   (body này hình dạng gì, nặng bao nhiêu)
+ ├── joint  (cử động thế nào so với cha)
+ └── geom   (hình dạng gì, nặng bao nhiêu)
 ```
-
-`type="slide"` + `axis="1 0 0"` = trượt dọc trục x. Đây là `qpos[0]`.
 
 ### 35–40 phút — Pole body
 
@@ -202,97 +217,107 @@ body
 </body>
 ```
 
-Chú ý pole nằm **bên trong** `<body name="cart">`. Đó không phải chi tiết trình bày — nó chính là coupling ở mức cấu trúc model:
+**Điểm phải nhấn:** pole nằm **bên trong** `<body name="cart">`. Đó chính là coupling ở mức cấu trúc model:
 
 ```text
-cart moves  →  gốc pole di chuyển theo cart  →  pole bị "giật"
+cart moves → gốc pole di chuyển theo cart → pole bị "giật"
 ```
 
-Nếu đặt pole ngang hàng với cart trong `<worldbody>`, hai vật sẽ hoàn toàn độc lập và không còn là cart-pole nữa.
+*Câu hỏi ném ra lớp:* nếu đặt pole ngang hàng với cart trong `<worldbody>` thì sao? — Hai vật độc lập hoàn toàn, không còn là cart-pole nữa.
 
-> **`slide` và `hinge` khác nhau thế nào?** `slide` cho tịnh tiến dọc `axis` (đơn vị mét), `hinge` cho quay quanh `axis` (đơn vị radian). Cart-pole cần đúng một cái mỗi loại.
+> `slide` cho tịnh tiến dọc `axis` (mét), `hinge` cho quay quanh `axis` (radian). Cart-pole cần đúng một cái mỗi loại.
 
 ---
 
 ## 40–55 phút — Mass, inertia và geometry
 
-### 40–45 phút — Mass
+### 40–45 phút — Mass · TUNE
 
-Đổi `mass` của pole trong [model.xml](model.xml) rồi chạy lại `simulate.py`:
+Cho học viên sửa `mass` của pole trong [model.xml](model.xml), chạy lại `simulate.py` sau mỗi lần:
 
-```xml
-mass="0.1"   →   mass="1.0"
+```text
+mass="0.05"  →  "0.1"  →  "0.5"  →  "1.0"
 ```
 
-> **Câu hỏi:** Pole nặng hơn thì cart phản ứng thế nào?
+*Bắt đoán trước khi chạy:* pole nặng hơn thì cart phản ứng thế nào?
 
-Đo bằng số: `python experiments.py 2`.
+**Đáp án mong đợi:** cùng một lực đẩy, pole càng nặng thì cart tăng tốc càng chậm — lực phải gia tốc **tổng** khối lượng cart + pole.
+
+> 📊 `media/03_mass.png` — chiếu **sau** khi lớp đã đoán.
 
 ### 45–50 phút — Inertia
-
-Ở mức trực quan:
 
 ```text
 mass    → cản gia tốc DÀI  (tịnh tiến)
 inertia → cản gia tốc GÓC  (quay)
 ```
 
-MuJoCo **tự tính inertia** từ hình dạng và khối lượng của geom. Muốn tự khai báo thì dùng thẻ `<inertial>`:
+MuJoCo **tự tính inertia** từ hình dạng và khối lượng geom. Muốn tự khai báo thì dùng `<inertial>`:
 
 ```xml
 <inertial pos="0 0 0.3" mass="0.1" diaginertia="0.003 0.003 1e-5"/>
 ```
 
-Không cần đi sâu inertia tensor ở buổi này.
+Không đi sâu inertia tensor ở buổi này.
 
-### 50–55 phút — Geometry KHÔNG chỉ để nhìn
+### 50–55 phút — Geometry KHÔNG chỉ để nhìn · TUNE
 
-Đây là điểm dễ hiểu nhầm nhất của buổi, đáng nhấn mạnh:
+Đây là điểm dễ hiểu nhầm nhất của buổi, đáng dành thời gian nhất:
 
 ```text
-geom size  →  shape  →  mass distribution  →  inertia  →  dynamics
+geom size → shape → mass distribution → inertia → dynamics
 ```
 
-Khi dùng inertia tự tính, **đổi `size` của geom là đổi luôn vật lý**, không chỉ đổi hình hiển thị.
+Cho học viên kéo dài pole trong `fromto`, **giữ nguyên `mass`**:
 
-Kiểm chứng: kéo dài pole từ 0.6 m lên 1.2 m trong `fromto`, giữ nguyên `mass="0.1"`.
+```xml
+fromto="0 0 0  0 0 0.6"    →    fromto="0 0 0  0 0 1.2"
+```
 
-| Chiều dài pole | Inertia quanh trục quay | Thời gian đổ tới 1.5 rad |
-|---|---|---|
-| 0.6 m | 3.28 × 10⁻³ | 0.584 s |
-| 1.2 m | 1.26 × 10⁻² (≈ 3.8 lần) | 0.790 s |
+*Bắt đoán:* cùng khối lượng, cùng trọng lực — pole dài hơn đổ nhanh hơn hay chậm hơn?
 
-Cùng khối lượng, cùng trọng lực — nhưng pole dài hơn đổ **chậm hơn rõ rệt**, chỉ vì khối lượng phân bố xa trục quay hơn.
+**Đáp án:** chậm hơn rõ rệt. Khối lượng phân bố xa trục quay hơn nên inertia lớn hơn nhiều. Với capsule đồng chất, inertia quanh pivot tỉ lệ với **bình phương** chiều dài — gấp đôi chiều dài thì inertia gấp khoảng bốn.
+
+> 📊 `media/04_inertia.png` — có sẵn số inertia của hai trường hợp ở chân hình, tiện đọc thẳng cho lớp.
+
+**Chốt:** khi dùng inertia tự tính, **đổi `size` của geom là đổi luôn vật lý**, không chỉ đổi hình hiển thị.
 
 ---
 
 ## 55–70 phút — Joint dynamics
 
-### 55–60 phút — Joint range
+### 55–60 phút — Joint range · TUNE
 
 ```xml
 <joint type="slide" limited="true" range="-1 1"/>
 ```
 
-Chạy `simulate.py`, kéo thanh trượt hết cỡ về một phía: cart chạy tới ±1 m rồi **dừng khựng**. MuJoCo thêm một constraint để giữ khớp trong khoảng cho phép.
+Chạy `simulate.py`, kéo thanh trượt hết cỡ về một phía: cart chạy tới ±1 m rồi **dừng khựng**. MuJoCo thêm constraint giữ khớp trong khoảng cho phép.
 
-Đây cũng là một cái bẫy khi đo đạc: nếu cart đâm biên thì mọi cấu hình đều cho cùng một `x`, và phép so sánh mất ý nghĩa. `experiments.py` xử lý bằng cách tạm gỡ giới hạn (`free_rail=True`) ở những thí nghiệm cần đo phản ứng của cart.
+Cho thử `range="-0.3 0.3"` để thấy cart bị nhốt chật hơn hẳn.
 
-### 60–65 phút — Damping
+### 60–65 phút — Damping · TUNE
 
 ```xml
-<joint damping="0.1"/>
+<joint name="pole_hinge" damping="..."/>
 ```
 
-Thử lần lượt `0`, `0.1`, `1.0` và quan sát pole.
+Cho chạy lần lượt và quan sát pole đung đưa:
 
 ```text
-damping lớn hơn  →  chuyển động tắt nhanh hơn
+damping = 0  →  0.01  →  0.1  →  1.0
+```
+
+```text
+damping lớn hơn → chuyển động tắt nhanh hơn
 ```
 
 Damping là moment **ngược chiều vận tốc khớp**: $\tau = -d\,\dot q$. Vì luôn ngược chiều chuyển động, nó luôn rút năng lượng khỏi hệ.
 
-Đo bằng số: `python experiments.py 3`.
+**Điểm thú vị đáng ném ra lớp:** `damping = 1.0` **không** đưa pole về vị trí nghỉ nhanh hơn `damping = 0.1`. Damping quá lớn thì pole không dao động nữa mà *bò* chậm chạp xuống — chế độ **overdamped**. Nhiều damping không đồng nghĩa với về đích nhanh.
+
+> 📊 `media/05_damping.png` — bốn mức damping trên cùng một hình.
+> 🎬 `media/05_damping_0.mp4` và `05_damping_1_0.mp4` — chiếu cạnh nhau để thấy tương phản dao động mãi / bò chậm.
 
 ### 65–70 phút — Friction
 
@@ -300,16 +325,14 @@ Damping là moment **ngược chiều vận tốc khớp**: $\tau = -d\,\dot q$.
 <joint frictionloss="0.01"/>
 ```
 
-Phân biệt hai thứ hay bị lẫn:
-
-| | Bản chất | Khi $\dot q = 0$ |
+| | Bản chất | Khi $\dot q \to 0$ |
 |---|---|---|
-| `damping` | tỉ lệ với vận tốc: $\tau = -d\dot q$ | bằng 0 |
+| `damping` | tỉ lệ vận tốc: $\tau = -d\dot q$ | lực cản yếu dần theo |
 | `frictionloss` | ma sát khô, độ lớn gần như không đổi | vẫn chống lại chuyển động |
 
-Hệ quả thực tế: `damping` chống lại chuyển động *tỉ lệ với tốc độ*, nên khớp càng chậm thì lực cản càng yếu. `frictionloss` giữ gần như nguyên độ lớn kể cả khi khớp sắp đứng yên — nó mô hình hoá ma sát khô trong hộp số, ổ trục.
+`frictionloss` mô hình hoá ma sát khô trong hộp số, ổ trục.
 
-> Trên lý thuyết, ma sát khô làm khớp dừng hẳn sau thời gian hữu hạn, còn damping thuần thì chỉ tiệm cận về 0. Nhưng MuJoCo giải `frictionloss` bằng constraint mềm, nên nếu bạn đo bằng số sẽ thấy cả hai đều chỉ tiến về những giá trị rất nhỏ chứ không cho một mốc dừng dứt khoát. Hiểu đúng bản chất khác nhau là đủ; đừng dùng thí nghiệm số để "chứng minh" điểm lý thuyết này.
+> **Lưu ý khi soạn:** lý thuyết nói ma sát khô làm khớp dừng hẳn sau thời gian hữu hạn, còn damping thuần chỉ tiệm cận về 0. Nhưng MuJoCo giải `frictionloss` bằng constraint mềm, nên nhìn trong viewer sẽ không thấy mốc dừng dứt khoát nào. Dạy đúng bản chất khác nhau là đủ — đừng hứa với lớp một hiện tượng mà viewer không cho thấy.
 
 ---
 
@@ -326,129 +349,121 @@ Hệ quả thực tế: `damping` chống lại chuyển động *tỉ lệ vớ
 Chuỗi ánh xạ cần thuộc:
 
 ```text
-data.ctrl[0]  →  cart_motor  →  cart_slide  →  lực dọc trục x lên cart
+data.ctrl[0] → cart_motor → cart_slide → lực dọc trục x lên cart
 ```
 
 `<motor>` là actuator đơn giản nhất: lực ra tỉ lệ thẳng với `ctrl`, hệ số là `gear`. Với `gear="1"` thì `ctrl = 3` nghĩa là 3 N.
 
-Chỉ cart có actuator. Pole thì không — nhắc lại tính underactuated.
+Nhắc lại: chỉ cart có actuator, pole thì không.
 
-### 75–80 phút — Control range
+### 75–80 phút — Control range · TUNE
 
 ```xml
-<motor joint="cart_slide" ctrllimited="true" ctrlrange="-10 10"/>
+<motor ctrllimited="true" ctrlrange="-10 10"/>
 ```
 
-`ctrlrange` **kẹp** lệnh điều khiển trước khi nó thành lực. Ghi `data.ctrl[0] = 50` thì MuJoCo vẫn chỉ ra 10 N — hệt như `ctrl = 10`. Thí nghiệm 4 in ra đúng hiện tượng này.
+Trong viewer, kéo thanh trượt `cart_motor` tới các mức khác nhau và xem cart phản ứng. Sau đó sửa thành `ctrlrange="-2 2"`, chạy lại: thanh trượt giờ chỉ kéo được tới 2, và cart yếu hẳn.
 
-Đây là mô hình hoá giới hạn vật lý của động cơ thật. Ở buổi này ta chỉ ra **lệnh**; chưa có controller nào tự tính lệnh cả — đó là buổi 3.
+> 📊 `media/06_ctrlrange.png` — đường `ctrl = 50` (nét đứt) nằm **chồng khít** lên `ctrl = 10`. Hình này tự nói hết, gần như không cần giảng thêm.
+
+`ctrlrange` **kẹp** lệnh trước khi nó thành lực — đây là cách mô hình hoá giới hạn vật lý của động cơ thật.
+
+Buổi này chỉ ra **lệnh** bằng tay. Chưa có controller nào tự tính lệnh — đó là buổi 3.
 
 ---
 
 ## 80–95 phút — State inspection
 
-Chạy [inspect_state.py](inspect_state.py) và đọc code song song.
+### 80–90 phút — qpos / qvel là gì
 
-### 80–85 phút — Load model
-
-```python
-model = mujoco.MjModel.from_xml_path("model.xml")
-data  = mujoco.MjData(model)
-```
-
-### 85–90 phút — Đọc state, và ĐỪNG đoán index
-
-Với cart-pole thì mapping đúng như trực giác:
+Với cart-pole, mapping đúng như trực giác:
 
 ```text
 qpos[0] → cart position       qvel[0] → cart velocity
 qpos[1] → pole angle          qvel[1] → pole angular velocity
 ```
 
-Nhưng **không nên đoán**. Cách tra đúng:
+> 📊 `media/09_state_sequence.png` — chuỗi bốn ảnh pole đổ dần, dùng để chỉ vào và nói "qpos[1] chính là con số này".
+
+Xem trực tiếp trong viewer: nhấn `Tab`, panel **trái**, mục **Watch** — gõ tên trường (`qpos`, `qvel`) để theo dõi giá trị thay đổi theo thời gian. Không cần viết script nào.
+
+**Nhưng phải cảnh báo:** đừng quen đoán index. Ở model lớn có free joint, **`qpos` và `qvel` không cùng độ dài** — một free joint chiếm 7 ô `qpos` (3 vị trí + 4 quaternion) nhưng chỉ 6 ô `qvel`. Cách tra đúng là qua tên:
 
 ```python
-jid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "pole_hinge")
-i_pos = model.jnt_qposadr[jid]   # index trong qpos
-i_vel = model.jnt_dofadr[jid]    # index trong qvel
+jid   = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "pole_hinge")
+i_pos = model.jnt_qposadr[jid]
+i_vel = model.jnt_dofadr[jid]
 ```
 
-Vì sao quan trọng: ở model lớn có free joint, **`qpos` và `qvel` không còn cùng độ dài** — một free joint chiếm 7 ô `qpos` (3 vị trí + 4 quaternion) nhưng chỉ 6 ô `qvel`. Đoán index ở đó là sai chắc chắn.
+Hoặc gọn hơn — khai báo `<sensor>` trong XML rồi đọc `data.sensordata`. Model của buổi này đã có sẵn bốn sensor để học viên thấy cú pháp.
 
-Cách thứ hai, gọn hơn — khai báo `<sensor>` trong XML rồi đọc `data.sensordata`:
+### 90–95 phút — Bắc cầu sang part 2
 
-```xml
-<sensor>
-    <jointpos joint="pole_hinge" name="pole_angle"/>
-</sensor>
-```
+Đây là chỗ nối buổi 2 với repo chính. Bài `part_2_models_control/02_cartpole` trên nhánh `main` dùng đúng hệ cart-pole này nhưng ở mức cao hơn: linearization giải tích, `mjd_transitionFD`, thiết kế LQR, swing-up. Toàn bộ phần đọc state bằng Python đã được xử lý sẵn ở đó.
 
-### 90–95 phút — Ghi control input
-
-```python
-data.ctrl[0] = 3.0
-mujoco.mj_step(model, data)
-```
-
-```text
-ctrl  →  motion  →  qpos/qvel thay đổi
-```
-
-`inspect_state.py` in bảng state theo thời gian dưới lực 3 N. Đọc bảng đó sẽ thấy: cart chạy sang phải đều đặn, còn pole **ngả về phía ngược lại** rồi vượt qua 0 và đổ hẳn. Không có actuator nào tác động lên pole — toàn bộ chuyển động của nó là hệ quả gián tiếp. Đó là coupling, quan sát được bằng số.
+**Thông điệp:** buổi 2 dạy *tham số*; muốn *điều khiển* thì sang part 2.
 
 ---
 
 ## 95–110 phút — Hands-on experiments
 
-Phần **cốt lõi** của buổi. Chạy `python experiments.py`, hoặc từng cái một với `python experiments.py <số>`.
+Phần **cốt lõi**. Học viên tự sửa `model.xml` và chạy lại. Nguyên tắc xuyên suốt phải nhắc đi nhắc lại:
 
-Nguyên tắc xuyên suốt: **mỗi lần chỉ đổi đúng một tham số**. Đổi hai thứ cùng lúc thì không thể biết cái nào gây ra thay đổi.
+> **Mỗi lần chỉ đổi đúng một tham số.** Đổi hai thứ cùng lúc thì không thể biết cái nào gây ra thay đổi.
+
+Quy trình cho từng thí nghiệm: **đoán trước → sửa → chạy → so với dự đoán**. Phần "đoán trước" là phần dạy được; bỏ nó đi thì chỉ còn là nghịch tham số.
 
 ### Thí nghiệm 1 — Gravity
 
-```text
-gravity="0 0 -9.81"   vs   "0 0 -1.62"   vs   "0 0 0"
+```xml
+gravity="0 0 -9.81"   →   "0 0 -1.62"   →   "0 0 0"
 ```
 
-> Thành phần nào của dynamics biến mất khi $g = 0$?
+*Hỏi:* thành phần nào của dynamics biến mất khi $g = 0$?
 
-Với $g = 0$, pole **giữ nguyên góc lệch 0.2 rad mãi mãi** — số hạng $g(q)$ bằng 0, không có gì kéo nó xuống nữa.
+**Quan sát:** với $g = 0$, pole giữ nguyên góc lệch mãi mãi — số hạng $g(q)$ bằng 0, không còn gì kéo nó xuống. (−1.62 là trọng trường Mặt Trăng, tiện để hỏi lớp đoán.)
+
+> 📊 `media/02_gravity.png` · 🎬 `media/02_gravity_zero.mp4`
 
 ### Thí nghiệm 2 — Pole mass
 
-```text
-0.05 kg   →   0.2 kg   →   1.0 kg
+```xml
+mass="0.05"   →   "0.2"   →   "1.0"
 ```
 
-Cùng lực 5 N: pole càng nặng, cart đi được càng ít trong cùng khoảng thời gian. Lực phải gia tốc **tổng** khối lượng cart + pole.
+Đẩy cart bằng thanh trượt ở cùng một mức lực, so sánh cart tăng tốc nhanh chậm ra sao.
+
+> **Bẫy khi làm thí nghiệm này:** nếu cart đâm vào giới hạn ±1 m thì mọi cấu hình đều dừng ở cùng chỗ và không so sánh được gì. Nhắc học viên chỉ đẩy trong khoảng ngắn, hoặc tạm đặt `limited="false"`.
 
 ### Thí nghiệm 3 — Damping
 
-```text
-0   →   0.01   →   0.1   →   1.0
+```xml
+damping="0"   →   "0.01"   →   "0.1"   →   "1.0"
 ```
 
-Đo bằng trung bình $|\dot\theta|$ trong 1 giây cuối — tức là hệ **còn đung đưa hay đã đứng yên**. (Đọc $\dot\theta$ tức thời ở đúng thời điểm cuối là con số may rủi: nó phụ thuộc pha dao động.)
-
-Kết quả có một điểm đáng bàn: `damping = 1.0` cho số **nhỉnh hơn** `damping = 0.1`. Không phải sai số — damping quá lớn thì pole không dao động nữa mà *bò* chậm về vị trí thấp nhất, và sau 8 s vẫn đang bò. Đó là chế độ **overdamped**: nhiều damping không đồng nghĩa với về đích nhanh.
+Quan sát pole đung đưa bao lâu thì tắt. Nhớ nhắc lại điểm **overdamped** ở mục 60–65.
 
 ### Thí nghiệm 4 — Input force
 
-```text
-ctrl = 1   →   5   →   10   →   50
-```
+Kéo thanh trượt `cart_motor` tới các mức khác nhau, xem cart tăng tốc thế nào và pole phản ứng ra sao.
 
-Trong 0.3 s đầu, quãng đường xấp xỉ tỉ lệ thuận với lực ($x = \tfrac12 a t^2$, $a = F/m$). Và dòng cuối cho kết quả **hệt** `ctrl = 10`, vì `ctrlrange` đã kẹp lệnh lại.
+Rồi sửa `ctrlrange` xuống `-2 2` và làm lại: cart yếu hẳn dù kéo hết cỡ.
 
 ### Thí nghiệm 5 — Timestep
 
-```text
-0.0005   →   0.002   →   0.01   →   0.05   →   0.1
+```xml
+timestep="0.001"   →   "0.002"   →   "0.01"   →   "0.05"   →   "0.1"
 ```
 
-So với một mô phỏng tham chiếu ở `dt = 0.00005`. Sai lệch lớn dần và **không tuyến tính**: tới `dt = 0.1` thì lệch hơn 0.5 rad — gần 30°, một mô phỏng không còn dùng được.
+**Thí nghiệm quan trọng nhất với người làm MuJoCo thật.** Quan sát:
 
-Đây là thí nghiệm quan trọng nhất với người làm MuJoCo thật: `timestep` là đánh đổi giữa độ chính xác và tốc độ mà **bạn** phải chọn, ở mọi dự án.
+- độ mượt của mô phỏng;
+- chuyển động có còn hợp lý không;
+- ở `dt` đủ lớn, hệ bắt đầu cư xử lạ — sai số tích luỹ mỗi bước.
+
+> 📊 `media/07_timestep.png` — panel phải là sai số RMS trên thang log, gần như một đường thẳng: sai số tỉ lệ tuyến tính với `dt`, đúng như lý thuyết tích phân Euler bậc 1.
+
+**Chốt:** `timestep` là đánh đổi giữa độ chính xác và tốc độ mà **bạn** phải chọn ở mọi dự án. Không có giá trị nào đúng cho mọi trường hợp.
 
 ---
 
@@ -458,9 +473,9 @@ So với một mô phỏng tham chiếu ở `dt = 0.00005`. Sai lệch lớn d�
 python simulate.py --broken
 ```
 
-[model_broken.xml](model_broken.xml) chứa **ba lỗi**. Cả ba đều hợp lệ về cú pháp — MuJoCo biên dịch trót lọt, không báo gì cả, chỉ có chuyển động là sai. Đó đúng là loại lỗi khó chịu nhất trong thực tế.
+[model_broken.xml](model_broken.xml) chứa **ba lỗi**. Cả ba đều hợp lệ về cú pháp — MuJoCo biên dịch trót lọt, không báo gì, chỉ chuyển động là sai. Đó đúng là loại lỗi khó chịu nhất trong thực tế.
 
-Bật các lớp hiển thị: nhấn `Tab`, panel **trái**, mục **Rendering**:
+Hướng dẫn lớp bật các lớp hiển thị: `Tab` → panel **trái** → mục **Rendering**:
 
 | Bật | Thấy được gì |
 |---|---|
@@ -469,17 +484,17 @@ Bật các lớp hiển thị: nhấn `Tab`, panel **trái**, mục **Rendering*
 | `Com` | khối tâm từng body |
 | `Contact Point` | điểm va chạm đang hoạt động |
 
-Mental model của việc debug model:
-
 ```text
 model behaves incorrectly
          ↓
-   inspect MJCF  +  inspect Viewer
+ inspect MJCF  +  inspect Viewer
          ↓
-     debug model
+    debug model
 ```
 
-Hãy tự tìm trước khi mở đáp án ở cuối file.
+> 📊 `media/08_broken_vs_correct.png` — hai hàng đúng/sai, đã bật sẵn `Joint` + `Com`. Dùng làm slide **chữa bài** sau khi lớp đã tự tìm.
+
+Để lớp tự tìm khoảng 5 phút rồi mới chữa. Đáp án ở cuối file.
 
 ---
 
@@ -500,8 +515,6 @@ Hãy tự tìm trước khi mở đáp án ở cuối file.
           qpos / qvel
 ```
 
-Vị trí của buổi 2 trong mạch chung:
-
 | | Câu hỏi |
 |---|---|
 | Buổi 1 | How to **describe** a system? |
@@ -510,31 +523,40 @@ Vị trí của buổi 2 trong mạch chung:
 
 ---
 
-## Những gì cần nhớ sau buổi 2
+## Checklist chuẩn bị trước buổi dạy
 
-Quan hệ cốt lõi:
+- [ ] Chạy `python make_slides_media.py`, kiểm tra `media/` đủ 10 PNG + 5 MP4, rồi chèn vào slide.
+- [ ] Chạy thử `simulate.py` trên đúng máy sẽ trình chiếu — viewer cần OpenGL, hay hỏng ở máy lạ.
+- [ ] Chạy thử `simulate.py --broken`, tự tìm lại ba lỗi qua viewer để quen thao tác bật `Rendering`.
+- [ ] Chuẩn bị sẵn một bản `model.xml` sạch để khôi phục sau khi lớp tune lung tung.
+- [ ] Làm trước cả 5 thí nghiệm, ghi lại **mình quan sát thấy gì** — mô tả hiện tượng bằng lời sẽ tự tin hơn nhiều so với đọc từ giáo án.
+- [ ] Nhớ mốc thời gian: hết phút 95 phải xong lý thuyết, để dành trọn 15 phút cho hands-on.
+
+---
+
+## Những gì học viên cần nhớ sau buổi 2
 
 ```text
-MJCF parameter  →  physics property  →  simulation behavior
+MJCF parameter → physics property → simulation behavior
 ```
 
-Tự trả lời được 10 câu sau là đạt:
+Mười câu để tự kiểm tra:
 
 1. `mass` ảnh hưởng dynamics thế nào?
-2. `damping` khai báo ở đâu trong MJCF, và khác `frictionloss` chỗ nào?
+2. `damping` khai báo ở đâu, và khác `frictionloss` chỗ nào?
 3. `gravity` được thiết lập ở đâu?
-4. `slide` và `hinge` joint khác nhau thế nào?
+4. `slide` và `hinge` khác nhau thế nào?
 5. Cart-pole cần bao nhiêu joint? Bao nhiêu actuator? Vì sao hai con số đó khác nhau?
 6. Actuator tác động vào joint nào?
-7. `ctrl` được ánh xạ sang lực như thế nào, và `ctrlrange` can thiệp ở đâu?
-8. `qpos` và `qvel` chứa gì, và vì sao không nên đoán index?
+7. `ctrl` ánh xạ sang lực thế nào, `ctrlrange` can thiệp ở đâu?
+8. `qpos` và `qvel` chứa gì, vì sao không nên đoán index?
 9. Đổi `timestep` ảnh hưởng simulation thế nào?
-10. Dùng Viewer để tìm lỗi model ra sao?
+10. Dùng Viewer tìm lỗi model ra sao?
 
 ---
 
 <details>
-<summary><b>ĐÁP ÁN — ba lỗi trong <code>model_broken.xml</code></b> (mở sau khi đã tự tìm)</summary>
+<summary><b>ĐÁP ÁN — ba lỗi trong <code>model_broken.xml</code></b></summary>
 
 **Lỗi 1 — sai trục của slide joint.**
 
@@ -543,7 +565,7 @@ Tự trả lời được 10 câu sau là đạt:
 <joint name="cart_slide" type="slide" axis="1 0 0"/>   <!-- đúng -->
 ```
 
-Cart trượt theo trục **y**, tức là đâm xuyên qua thanh ray thay vì chạy dọc nó. Bật `Joint` trong Rendering sẽ thấy mũi tên trục trượt vuông góc với ray.
+Cart trượt theo trục **y**, tức đâm ngang qua thanh ray thay vì chạy dọc nó. Bật `Joint` sẽ thấy mũi tên trục trượt vuông góc với ray.
 
 **Lỗi 2 — pole đặt lơ lửng.**
 
@@ -552,7 +574,7 @@ Cart trượt theo trục **y**, tức là đâm xuyên qua thanh ray thay vì c
 <body name="pole" pos="0 0 0.05">   <!-- đúng -->
 ```
 
-Gốc pole nằm cách mặt trên của cart 0.45 m, treo giữa không trung. Bật `Frame → Body` sẽ thấy hệ trục của pole tách rời hẳn khỏi cart.
+Gốc pole cách mặt trên cart 0.45 m, treo giữa không trung. Bật `Frame → Body` sẽ thấy hệ trục của pole tách rời hẳn khỏi cart.
 
 **Lỗi 3 — sai trục của hinge joint.**
 
@@ -561,6 +583,8 @@ Gốc pole nằm cách mặt trên của cart 0.45 m, treo giữa không trung. 
 <joint name="pole_hinge" type="hinge" axis="0 1 0"/>   <!-- đúng -->
 ```
 
-Pole quay quanh trục **x**, tức là đổ sang hai bên, trong khi cart chỉ chạy dọc trục x. Hai chuyển động nằm trong hai mặt phẳng vuông góc nhau nên **coupling biến mất**: đẩy cart thế nào pole cũng không phản ứng. Đây là lỗi nguy hiểm nhất trong ba lỗi vì model vẫn "trông có vẻ chạy".
+Pole quay quanh trục **x** — đổ sang hai bên — trong khi cart chỉ chạy dọc trục x. Hai chuyển động nằm trong hai mặt phẳng vuông góc nên **coupling biến mất**: đẩy cart thế nào pole cũng không phản ứng.
+
+Đây là lỗi nguy hiểm nhất trong ba lỗi vì model vẫn "trông có vẻ chạy". Đáng để dành thời gian nhất khi chữa.
 
 </details>

@@ -6,12 +6,26 @@
        gravity  : vector trọng trường (m/s^2) theo trục x y z.
        Hai tham số này là đối tượng của Experiment 1 và 5 trong README.
        =================================================================== -->
-  <option timestep="0.002" gravity="0 0 -9.81"/>
+  <option timestep="0.002" gravity="0 0 -9.81">
+    <!-- Bật tính năng lượng cơ học -> data.energy. Không bắt buộc cho mô
+         phỏng, nhưng script sinh hình cho slide cần nó. -->
+    <flag energy="enable"/>
+  </option>
 
   <visual>
     <map znear="0.01" zfar="10"/>
     <global offwidth="1280" offheight="720"/>
+    <!-- Nền sáng: hình render ra dùng thẳng cho slide, nền đen mặc định
+         của MuJoCo chìm nghỉm trên nền trắng của slide. -->
+    <rgba haze="0.9 0.93 0.96 1"/>
+    <headlight ambient="0.5 0.5 0.5" diffuse="0.5 0.5 0.5"
+               specular="0.1 0.1 0.1"/>
   </visual>
+
+  <asset>
+    <texture name="sky" type="skybox" builtin="gradient"
+             rgb1="0.72 0.80 0.90" rgb2="0.95 0.96 0.98" width="256" height="256"/>
+  </asset>
 
   <!-- <default> — giá trị mặc định dùng chung, khỏi lặp lại ở mỗi thẻ. -->
   <default>
