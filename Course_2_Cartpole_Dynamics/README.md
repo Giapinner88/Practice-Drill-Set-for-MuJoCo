@@ -1,6 +1,8 @@
 # Buổi 2 — Cart-pole: Động lực học trong MuJoCo
 
-> **Giáo án cho người trình bày.** File này là kịch bản để chuẩn bị buổi dạy, không phải tài liệu phát cho học viên.
+> **Giáo án cho người trình bày.** File này là cấu trúc buổi dạy, không phải tài liệu phát cho học viên.
+>
+> Cần **lời thoại chi tiết để đọc khi dạy** → xem [SCRIPT.md](SCRIPT.md).
 
 **Thời lượng:** 120 phút · **Yêu cầu trước:** Buổi 1 (SO-101 cơ bản)
 
@@ -17,7 +19,8 @@ Course_2_Cartpole_Dynamics/
 ├── simulate.py            # chạy + xem, giống hệt form của buổi 1
 ├── make_slides_media.py   # sinh hình + video cho slide (chạy khi soạn bài)
 ├── media/                 # kết quả: 10 PNG + 5 MP4, bỏ thẳng vào slide
-└── README.md              # giáo án này
+├── README.md              # giáo án này — cấu trúc, mốc thời gian
+└── SCRIPT.md              # kịch bản nói — lời thoại đọc khi đứng lớp
 ```
 
 ```bash
@@ -525,6 +528,7 @@ model behaves incorrectly
 
 ## Checklist chuẩn bị trước buổi dạy
 
+- [ ] Đọc [SCRIPT.md](SCRIPT.md) một lượt, đánh dấu chỗ nào muốn nói theo ý mình.
 - [ ] Chạy `python make_slides_media.py`, kiểm tra `media/` đủ 10 PNG + 5 MP4, rồi chèn vào slide.
 - [ ] Chạy thử `simulate.py` trên đúng máy sẽ trình chiếu — viewer cần OpenGL, hay hỏng ở máy lạ.
 - [ ] Chạy thử `simulate.py --broken`, tự tìm lại ba lỗi qua viewer để quen thao tác bật `Rendering`.
